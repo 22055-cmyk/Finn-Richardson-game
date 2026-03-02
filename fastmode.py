@@ -21,11 +21,27 @@ orange = (255, 165, 0)
 screen = pygame.display.set_mode((window_width, window_height))
 font = pygame.font.Font(None, 36)
 
+
 class Button:
-    def __init__(self, x, y, width, height, text, rect_colour=None, text_colour=None, onclickFunction=None):
+    """this code creates a button blueprint
+    
+    this code does hcdfhjgxchjghxfgxghfgdfgfgxfcgdfgdfgdfgdfgdfgdfsgdstgdsgdsgds
+
+
+    thus code changes
+    -cghdfhdfghdg
+    -dgfdfhgfhgfh
+    -gfjdf-hgfhdhcgj
+    
+    """
+    rect_colour = yellow
+    text_colour = black
+    onclickFunction = None
+    def __init__(self, rect_colour, text_colour, onclickFunction, x, y, width, height, text):
         self.rect = pygame.Rect(x, y, width, height)
         self.text = text
-        self.rect_colour = rect_colour
+        self.image.fill(rect_colour) 
+        self.rect = self.image.get_rect()
         self.text_colour = text_colour
         self.onclickFunction = onclickFunction
 
@@ -66,8 +82,8 @@ def play():
 #screen.blit(button_text, text_rect)
 
 
-ExitButton = Button(100, 100, 100, 100, "exit", exit)
-PlayButton = Button(300, 300, 100, 100, 'play', play, green)
+ExitButton = Button(100, 100, 100, 100, "exit", exit, red, white)
+PlayButton = Button(300, 300, 100, 100, 'play', play, green, white)
 
 startmenu = True
 while startmenu:
