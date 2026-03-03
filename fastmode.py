@@ -12,7 +12,7 @@ window_width = 1000
 window_height = 750
 screen = pygame.display.set_mode((window_width, window_height))
 font = pygame.font.Font(None, 36)
-
+screen_colour = (0, 0, 0)
 
 class Button:
     """this code creates a button blueprint
@@ -50,6 +50,7 @@ class Button:
         self.text_colour = text_colour
         #This defines what will happen when the button is clicked
         self.onclickFunction = onclickFunction
+        #Changing shape to either rect or circle
 
     def draw(self, surface):
         #This line draws the rect using what surface to put it on, defined when in the main loop, the colour and dimensions defined when using the class
@@ -65,25 +66,41 @@ class Button:
             if self.onclickFunction:
                 #Then it does the function defined below
                 self.onclickFunction()
+                
 #These are the definitions 
 def exit():
     #If you use exit function then the game will exit.
     pygame.quit()
     sys.exit()
 
-def play():
-    gameloop = True
-    while gameloop:
+def SelectDifficultyMenu():
+    selectdifficultymenu_loop = True
+    while selectdifficultymenu_loop:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                gameloop = False
-        screen.fill(black)
+                selectdifficultymenu_loop = False
+        #This is to make the screen black, removing the buttons from the start menu.
+        screen.fill(screen_colour)
+        OrbButton.draw(screen)
+        DifficultyOne.draw(screen)
+        DifficultyTwo.draw(screen)
+        DifficultyThree.draw(screen)
+        DifficultyFour.draw(screen)
+        DifficultyFive.draw(screen)
         pygame.display.update()
-    pygame.quit()
+    
 
-
-
-
+def Game():
+    game_loop = True
+    while game_loop:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game_loop = False
+        if DifficultyOne.():
+            difficulty = 1
+            print (f'{difficulty}')
+            screen.fill(screen_colour)
+            pygame.display.update()
 
 
 #button_rect = pygame.Rect(((window_width - width)/2, (window_height - height)/2), (width, height))
@@ -93,14 +110,25 @@ def play():
 #screen.blit(button_text, text_rect)
 
 
-ExitButton = Button(((window_width - 100)), ((window_height - 60)/2), 100, 60, "exit", exit, 'red', 'white')
-PlayButton = Button(300, ((window_height - 60)/2), 100, 60, 'play', play, 'green', 'white')
 
-startmenu = True
-while startmenu:
+#Setting all the positions to be changable if i chaange the window size of want to quickly change the size of the button themselves
+dif_width = 100
+dif_height = 60
+DifficultyOne = Button((((window_width - dif_width)/2)-(dif_width * 3)), ((window_height - dif_height)/2), dif_width, dif_height, "1 Orb", Game, "yellow", "black")
+DifficultyTwo = Button((((window_width - dif_width)/2)-(dif_width * 1.5)), ((window_height - dif_height)/2), dif_width, dif_height, "2 Orbs", None, "yellow", "black")
+DifficultyThree = Button(((window_width - dif_width)/2), ((window_height - dif_height)/2), dif_width, dif_height, "3 Orbs", None, "yellow", "black")
+DifficultyFour = Button((((window_width - dif_width)/2)+(dif_width * 1.5)), ((window_height - dif_height)/2), dif_width, dif_height, "4 Orbs", None, "yellow", "black")
+DifficultyFive = Button((((window_width - dif_width)/2)+(dif_width * 3)), ((window_height - dif_height)/2), dif_width, dif_height, "5 Orbs", None, "yellow", "black")
+
+OrbButton = Button(((window_width - 250)/2), ((window_height - 60)*1/3), 250, 60, 'Choose Difficulty', None, 'yellow', 'black')
+ExitButton = Button(((window_width - 100)*1/3), ((window_height - 60)/2), 100, 60, "exit", exit, 'red', 'white')
+PlayButton = Button(((window_width - 100)*2/3), ((window_height - 60)/2), 100, 60, 'play', SelectDifficultyMenu, 'green', 'white')
+
+startmenu_loop = True
+while startmenu_loop:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            startmenu = False
+            startmenu_loop = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             ExitButton.check_click(event.pos)
             PlayButton.check_click(event.pos)
