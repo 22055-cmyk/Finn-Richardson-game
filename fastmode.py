@@ -66,7 +66,7 @@ class Button:
             if self.onclickFunction:
                 #Then it does the function defined below
                 self.onclickFunction()
-                
+
 #These are the definitions 
 def exit():
     #If you use exit function then the game will exit.
@@ -79,24 +79,29 @@ def SelectDifficultyMenu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 selectdifficultymenu_loop = False
+                pygame.quit()
         #This is to make the screen black, removing the buttons from the start menu.
-        screen.fill(screen_colour)
-        OrbButton.draw(screen)
-        DifficultyOne.draw(screen)
-        DifficultyTwo.draw(screen)
-        DifficultyThree.draw(screen)
-        DifficultyFour.draw(screen)
-        DifficultyFive.draw(screen)
-        pygame.display.update()
-    
+        if selectdifficultymenu_loop = True:
+            screen.fill(screen_colour)
+            OrbButton.draw(screen)
+            DifficultyOne.draw(screen)
+            DifficultyTwo.draw(screen)
+            DifficultyThree.draw(screen)
+            DifficultyFour.draw(screen)
+            DifficultyFive.draw(screen)
+            pygame.display.update()
+        else:
+            
 
 def Game():
+    
     game_loop = True
     while game_loop:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_loop = False
-        if DifficultyOne.():
+                pygame.quit()
+        if Button.onclickFunction(DifficultyOne):
             difficulty = 1
             print (f'{difficulty}')
             screen.fill(screen_colour)
