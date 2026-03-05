@@ -38,11 +38,15 @@ class Button:
             'purple': '#9D00FF',
             'orange': '#FFA500',
         }
-    def __init__(self, x, y, width, height, text, onclickFunction, rect_colour, text_colour):
+    def __init__(self, x, y, width, height, text, difficulty, onclickFunction, rect_colour, text_colour):
         #Gets the dimensions for the button size and position
         self.rect = pygame.Rect(x, y, width, height)
         #Text on the button
         self.text = text
+
+        difficulty = 0
+
+        self.difficulty = difficulty
         #These lines of code check whether you have defined a colour from the dictionary if so it will set the colour of the rect or text to the definition
         self.rect_colour = self.colours.get(rect_colour)
         self.text_colour = self.colours.get(text_colour)
@@ -81,31 +85,40 @@ def SelectDifficultyMenu():
                 selectdifficultymenu_loop = False
                 pygame.quit()
         #This is to make the screen black, removing the buttons from the start menu.
-        if selectdifficultymenu_loop = True:
-            screen.fill(screen_colour)
-            OrbButton.draw(screen)
-            DifficultyOne.draw(screen)
-            DifficultyTwo.draw(screen)
-            DifficultyThree.draw(screen)
-            DifficultyFour.draw(screen)
-            DifficultyFive.draw(screen)
-            pygame.display.update()
-        else:
-            
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                DifficultyOne.check_click(event.pos)
+                DifficultyTwo.check_click(event.pos)
+                DifficultyThree.check_click(event.pos)
+                DifficultyFour.check_click(event.pos)
+                DifficultyFive.check_click(event.pos)
+        
+        screen.fill(screen_colour)
+        OrbButton.draw(screen)
+        DifficultyOne.draw(screen)
+        DifficultyTwo.draw(screen)
+        DifficultyThree.draw(screen)
+        DifficultyFour.draw(screen)
+        DifficultyFive.draw(screen)
+        pygame.display.update()
 
+        #elif selectdifficultymenu_loop == False:
+            #screen.fill(screen_colour)
+            #pygame.display.update()
+
+            
 def Game():
-    
     game_loop = True
+    difficulty = 0
     while game_loop:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_loop = False
                 pygame.quit()
-        if Button.onclickFunction(DifficultyOne):
-            difficulty = 1
-            print (f'{difficulty}')
+            print(difficulty)
+            print(f"you are now playing astmode at dificulty {difficulty}")
             screen.fill(screen_colour)
             pygame.display.update()
+            
 
 
 #button_rect = pygame.Rect(((window_width - width)/2, (window_height - height)/2), (width, height))
@@ -119,15 +132,15 @@ def Game():
 #Setting all the positions to be changable if i chaange the window size of want to quickly change the size of the button themselves
 dif_width = 100
 dif_height = 60
-DifficultyOne = Button((((window_width - dif_width)/2)-(dif_width * 3)), ((window_height - dif_height)/2), dif_width, dif_height, "1 Orb", Game, "yellow", "black")
-DifficultyTwo = Button((((window_width - dif_width)/2)-(dif_width * 1.5)), ((window_height - dif_height)/2), dif_width, dif_height, "2 Orbs", None, "yellow", "black")
-DifficultyThree = Button(((window_width - dif_width)/2), ((window_height - dif_height)/2), dif_width, dif_height, "3 Orbs", None, "yellow", "black")
-DifficultyFour = Button((((window_width - dif_width)/2)+(dif_width * 1.5)), ((window_height - dif_height)/2), dif_width, dif_height, "4 Orbs", None, "yellow", "black")
-DifficultyFive = Button((((window_width - dif_width)/2)+(dif_width * 3)), ((window_height - dif_height)/2), dif_width, dif_height, "5 Orbs", None, "yellow", "black")
+DifficultyOne = Button((((window_width - dif_width)/2)-(dif_width * 3)), ((window_height - dif_height)/2), dif_width, dif_height, "1 Orb", 1, Game, "yellow", "black")
+DifficultyTwo = Button((((window_width - dif_width)/2)-(dif_width * 1.5)), ((window_height - dif_height)/2), dif_width, dif_height, "2 Orbs", 2, Game, "yellow", "black")
+DifficultyThree = Button(((window_width - dif_width)/2), ((window_height - dif_height)/2), dif_width, dif_height, "3 Orbs", 3, Game, "yellow", "black")
+DifficultyFour = Button((((window_width - dif_width)/2)+(dif_width * 1.5)), ((window_height - dif_height)/2), dif_width, dif_height, "4 Orbs", 4, Game, "yellow", "black")
+DifficultyFive = Button((((window_width - dif_width)/2)+(dif_width * 3)), ((window_height - dif_height)/2), dif_width, dif_height, "5 Orbs", 5, Game, "yellow", "black")
 
-OrbButton = Button(((window_width - 250)/2), ((window_height - 60)*1/3), 250, 60, 'Choose Difficulty', None, 'yellow', 'black')
-ExitButton = Button(((window_width - 100)*1/3), ((window_height - 60)/2), 100, 60, "exit", exit, 'red', 'white')
-PlayButton = Button(((window_width - 100)*2/3), ((window_height - 60)/2), 100, 60, 'play', SelectDifficultyMenu, 'green', 'white')
+OrbButton = Button(((window_width - 250)/2), ((window_height - 60)*1/3), 250, 60, 'Choose Difficulty', None, None, 'yellow', 'black')
+ExitButton = Button(((window_width - 100)*1/3), ((window_height - 60)/2), 100, 60, "exit", None, exit, 'red', 'white')
+PlayButton = Button(((window_width - 100)*2/3), ((window_height - 60)/2), 100, 60, 'play', None, SelectDifficultyMenu, 'green', 'white')
 
 startmenu_loop = True
 while startmenu_loop:
