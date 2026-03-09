@@ -115,7 +115,7 @@ def Game():
                 game_loop = False
                 pygame.quit()
             print(difficulty)
-            print(f"you are now playing astmode at dificulty {difficulty}")
+            print(f"you are now playing astmode at difficulty {difficulty}")
             screen.fill(screen_colour)
             pygame.display.update()
             
