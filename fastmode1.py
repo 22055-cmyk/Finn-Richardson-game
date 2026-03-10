@@ -7,7 +7,7 @@ pygame.init()
 
 fps = 60
 fpsClock = pygame.time.Clock()
-
+difficulty = 0
 window_width = 1000
 window_height = 750
 screen = pygame.display.set_mode((window_width, window_height))
@@ -43,9 +43,6 @@ class Button:
         self.rect = pygame.Rect(x, y, width, height)
         #Text on the button
         self.text = text
-
-        difficulty = 0
-
         self.difficulty = difficulty
         #These lines of code check whether you have defined a colour from the dictionary if so it will set the colour of the rect or text to the definition
         self.rect_colour = self.colours.get(rect_colour)
@@ -107,15 +104,18 @@ def SelectDifficultyMenu():
 
             
 def Game():
+    DifficultyOne.difficulty()
+    DifficultyTwo.difficulty()
+    DifficultyThree.difficulty()
+    DifficultyFour.difficulty()
+    DifficultyFive.difficulty()
     game_loop = True
-    difficulty = 0
     while game_loop:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_loop = False
                 pygame.quit()
-            print(difficulty)
-            print(f"you are now playing astmode at difficulty {difficulty}")
+            print(f"you are now playing fastmode at difficulty {difficultytype}{difficulty}")
             screen.fill(screen_colour)
             pygame.display.update()
             
@@ -130,6 +130,7 @@ def Game():
 
 
 #Setting all the positions to be changable if i chaange the window size of want to quickly change the size of the button themselves
+#(x, y, width, height, text, difficulty, onclickFunction, rect_colour, text_colour)
 dif_width = 100
 dif_height = 60
 DifficultyOne = Button((((window_width - dif_width)/2)-(dif_width * 3)), ((window_height - dif_height)/2), dif_width, dif_height, "1 Orb", 1, Game, "yellow", "black")
