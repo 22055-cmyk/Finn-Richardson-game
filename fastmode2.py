@@ -51,6 +51,11 @@ class Button:
         #This defines what will happen when the button is clicked
         self.onclickFunction = onclickFunction
         #Changing shape to either rect or circle
+    def difficulty(self, dif):
+        self.dif = dif 
+        
+
+
 
     def draw(self, surface):
         #This line draws the rect using what surface to put it on, defined when in the main loop, the colour and dimensions defined when using the class
@@ -63,6 +68,8 @@ class Button:
         #Checks if mouse is over the button
         if self.rect.collidepoint(pos):
             #Checks whether onclickfunction has been defined in the class blueprint
+            if self.dif:
+                self.dif()
             if self.onclickFunction:
                 #Then it does the function defined below
                 self.onclickFunction()
@@ -101,13 +108,8 @@ def SelectDifficultyMenu():
             #screen.fill(screen_colour)
             #pygame.display.update()
 
-def Difficulty(dif):
-    DifficultyOne = 1
-    DifficultyTwo = 2
-    DifficultyThree = 3
-    DifficultyFour = 4
-    DifficultyFive = 5
-    dif = 
+
+    
         
 
     #if DifficultyTwo
@@ -118,7 +120,7 @@ def Game():
             if event.type == pygame.QUIT:
                 game_loop = False
                 pygame.quit()
-            print(f"you are now playing fastmode at difficulty {difficulty}")
+            print(f"you are now playing fastmode at difficulty")
             screen.fill(screen_colour)
             pygame.display.update()
             
@@ -141,6 +143,12 @@ DifficultyTwo = Button((((window_width - dif_width)/2)-(dif_width * 1.5)), ((win
 DifficultyThree = Button(((window_width - dif_width)/2), ((window_height - dif_height)/2), dif_width, dif_height, "3 Orbs", Game, "yellow", "black")
 DifficultyFour = Button((((window_width - dif_width)/2)+(dif_width * 1.5)), ((window_height - dif_height)/2), dif_width, dif_height, "4 Orbs", Game, "yellow", "black")
 DifficultyFive = Button((((window_width - dif_width)/2)+(dif_width * 3)), ((window_height - dif_height)/2), dif_width, dif_height, "5 Orbs", Game, "yellow", "black")
+
+DifficultyOne.difficulty(1)
+DifficultyTwo.difficulty(2)
+DifficultyThree.difficulty(3)
+DifficultyFour.difficulty(4)
+DifficultyFive.difficulty(5)
 
 OrbButton = Button(((window_width - 250)/2), ((window_height - 60)*1/3), 250, 60, 'Choose Difficulty', None, 'yellow', 'black')
 ExitButton = Button(((window_width - 100)*1/3), ((window_height - 60)/2), 100, 60, "exit", exit, 'red', 'white')
