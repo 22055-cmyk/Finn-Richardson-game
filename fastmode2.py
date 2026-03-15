@@ -1,5 +1,7 @@
 import sys
 import pygame
+import pygame_widgets
+from pygame_widgets.slider import Slider
 import random
 
 
