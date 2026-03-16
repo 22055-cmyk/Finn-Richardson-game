@@ -115,7 +115,7 @@ def Game():
             if event.type == pygame.QUIT:
                 game_loop = False
                 pygame.quit()
-            print(f"you are now playing fastmode at difficulty {difficultytype}{difficulty}")
+            print(f"you are now playing fastmode at difficulty {difficulty}")
             screen.fill(screen_colour)
             pygame.display.update()
             

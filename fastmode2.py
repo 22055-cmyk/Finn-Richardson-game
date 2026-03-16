@@ -1,7 +1,5 @@
 import sys
 import pygame
-import pygame_widgets
-from pygame_widgets.slider import Slider
 import random
 
 
@@ -9,7 +7,7 @@ pygame.init()
 
 fps = 60
 fpsClock = pygame.time.Clock()
-difficulty = 0
+
 window_width = 1000
 window_height = 750
 screen = pygame.display.set_mode((window_width, window_height))
