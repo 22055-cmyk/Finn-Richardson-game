@@ -12,10 +12,9 @@ fpsClock = pygame.time.Clock()
 window_width = 1000
 window_height = 750
 screen = pygame.display.set_mode((window_width, window_height))
-font = pygame.font.Font(None, 36)
 screen_colour = (0, 0, 0)
 
-class Buttons:
+class Button:
     """this code creates a button blueprint
     
     This code makes a button that can have custom, x and y position, size, what is displayed on it, what happens when its pressed and the colours you want to use.
@@ -27,20 +26,18 @@ class Buttons:
     -Whether you enter the game or leave the game
     """
 
-    def __init__(self, x, y, onclickFunction):
-        #Gets the position of button
-        
+    def __init__(self, x, y, image_path, onclickFunction):
+        self.x = x
+        self.y = y
+        #Gets the image
+        self.image = pygame.image.load(image_path).convert_alpha()
+        #Makes the image 
+        self.rect = self.image.get_rect(topleft=(self.x, self.y))
         self.onclickFunction = onclickFunction
 
     def draw(self, surface):
-        #This line draws the rect using what surface to put it on, defined when in the main loop, the colour and dimensions defined when using the class
-        pygame.image.load('exit button pixel.png').convert_alpha()
-        
-        image_rect = my_image.get_rect()
-        image_rect.center = 
-        surface.blit(my_)
-        
-        
+        #This draws the image you want onto the surface you specify when drawing the image.
+        surface.blit(self.image, self.rect)
 
     def check_click(self, pos):
         #Checks if mouse is over the button
@@ -53,25 +50,25 @@ class Buttons:
 #These are the definitions 
 def Exit():
     #If you use exit function then the game will exit.
-    pygame.quit()
-    sys.exit()
+    print("exit")
     
 def Game():
     
-    game_screen = True
-    while game_screen:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                game_screen = False
-                pygame.quit()
-        screen.fill(screen_colour)
-        pygame.display.update()    
+    print("play")
+    #game_screen = True
+    #while game_screen:
+        #for event in pygame.event.get():
+            #if event.type == pygame.QUIT:
+                #game_screen = False
+                #pygame.quit()
+        #screen.fill(screen_colour)
+        #pygame.display.update()    
 
 
 #Setting all the positions to be changable if i chaange the window size of want to quickly change the size of the button themselves
 #(x, y, width, height, text, difficulty, onclickFunction, rect_colour, text_colour)
-ExitButton = Button(((window_width - 100)*1/3), ((window_height - 60)/2), 100, 60, "exit", Exit, 'red', 'white')
-PlayButton = Button(((window_width - 100)*2/3), ((window_height - 60)/2), 100, 60, 'play', Game, 'green', 'white')
+ExitButton = Button((window_width *1/3), (window_height/2), 'exitbutton.png', Exit)
+PlayButton = Button((window_width *2/3), (window_height/2), 'playbutton.png', Game)
 
 
 
