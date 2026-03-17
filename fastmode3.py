@@ -32,11 +32,12 @@ class Button:
         #Gets the image
         self.image = pygame.image.load(image_path).convert_alpha()
         #Makes the image 
-        self.rect = self.image.get_rect(topleft=(self.x, self.y))
+        self.rect = self.image.get_rect(center=(self.x, self.y))
         self.onclickFunction = onclickFunction
 
     def draw(self, surface):
         #This draws the image you want onto the surface you specify when drawing the image.
+        
         surface.blit(self.image, self.rect)
 
     def check_click(self, pos):
@@ -51,6 +52,7 @@ class Button:
 def Exit():
     #If you use exit function then the game will exit.
     print("exit")
+
     
 def Game():
     
@@ -67,7 +69,7 @@ def Game():
 
 #Setting all the positions to be changable if i chaange the window size of want to quickly change the size of the button themselves
 #(x, y, width, height, text, difficulty, onclickFunction, rect_colour, text_colour)
-ExitButton = Button((window_width *1/3), (window_height/2), 'exitbutton.png', Exit)
+ExitButton = Button((window_width *1/3), (window_height/2), 'pixil-frame-0 (6).png', Exit)
 PlayButton = Button((window_width *2/3), (window_height/2), 'playbutton.png', Game)
 
 
