@@ -57,7 +57,8 @@ def Game():
                 game_screen = False
                 pygame.quit()
         screen.fill(screen_colour)
-        pygame.display.update()    
+        pygame.display.update()
+        Wall.place(screen)
 
 def Exit():
     #If you use exit function then the game will exit.
@@ -72,57 +73,16 @@ def Exit():
 ExitButton = Button(((window_width * 1)/3), (window_height/2), 'exitbutton.png', Exit)
 PlayButton = Button(((window_width * 2)/3), (window_height/2), 'playbutton.png', Game)
 
-class Obstacle:
-    """This code places the obstacles
-    
-    This code checks the size of the window and chooses a random space inside the window to place a specific obstacle type
-    """
-    def __init__(self, obstacle):
-        #This calls 
-        self.obstacle = obstacle
-        self.rand_x = rand_x
-        self.rand_y = rand_y
-        rand_x = random.randit(0, (window_width / 50))
-        rand_y = random.randit(0, (window_height / 50))
-    def Place(self, surface):
-        surface.blit(self.obstacle, center=(self.rand_x, self.rand_y))
-        if self.obstacle:
-            self.obstacle()
+grid_width = 2
+grid_height = 2
+grid = [[0 for _ in range(grid_width)] for _ in range(grid_height)]
+x = random.randint(0, grid_width - 1)
+y = random.randint(0, grid_height - 1)
 
-def Wall():
-    place_walls_loop = True
-    while place_walls_loop:
-        number_of_walls = 0
-        max_walls = 25
-        if number_of_walls < max_walls:
-            print("can place walls")
-            place_walls_loop = False
-        else:
-            place_walls_loop = False
-
-def Void():
-    place_void_loop = True
-    while place_void_loop:
-        number_of_void = 0
-        max_void = 25
-        if number_of_void < max_void:
-            print("can place void")
-            place_void_loop = False
-        else:
-            place_void_loop = False
-
-def Star():
-    place_stars_loop = True
-    while place_stars_loop:
-        number_of_stars = 0
-        max_stars = 25
-        if number_of_stars < max_stars:
-            print("can place stars")
-            place_stars_loop = False
-        else:
-            place_stars_loop = False
-
-
+if grid[0][0] == 1:
+    print("occupied")
+else:
+    print("empty")
 
 game_loop = True
 while game_loop:

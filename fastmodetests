@@ -1,0 +1,18 @@
+import pygame
+import random 
+grid_width = 2
+grid_height = 2
+grid = [[0 for _ in range(grid_width)] for _ in range(grid_height)]
+x = random.randint(0, grid_width - 1)
+y = random.randint(0, grid_height - 1)
+
+grid [0][0] = 1
+
+
+if grid[y][x] == 1:
+    print("occupied")
+else:
+    print("empty")
+    grid[y][x] = 1
+    
+print(grid)
