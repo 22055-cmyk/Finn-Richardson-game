@@ -73,16 +73,22 @@ def Exit():
 ExitButton = Button(((window_width * 1)/3), (window_height/2), 'exitbutton.png', Exit)
 PlayButton = Button(((window_width * 2)/3), (window_height/2), 'playbutton.png', Game)
 
-grid_width = 2
-grid_height = 2
+grid_width = 20
+grid_height = 15
 grid = [[0 for _ in range(grid_width)] for _ in range(grid_height)]
 x = random.randint(0, grid_width - 1)
 y = random.randint(0, grid_height - 1)
 
-if grid[0][0] == 1:
-    print("occupied")
-else:
-    print("empty")
+grid [0][0] = 1
+
+placing_loop = True
+while placing_loop:
+    if grid[y][x] == 1:
+        print("occupied")
+    else:
+        print("empty")
+        grid[y][x] = 1
+
 
 game_loop = True
 while game_loop:
