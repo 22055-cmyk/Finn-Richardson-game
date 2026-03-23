@@ -57,9 +57,10 @@ def Game():
                 game_screen = False
                 pygame.quit()
         screen.fill(screen_colour)
+        Wall.draw(screen)
         pygame.display.update()
-        Wall.place(screen)
-
+        
+        
 def Exit():
     #If you use exit function then the game will exit.
     print("exit")
@@ -73,16 +74,31 @@ def Exit():
 ExitButton = Button(((window_width * 1)/3), (window_height/2), 'exitbutton.png', Exit)
 PlayButton = Button(((window_width * 2)/3), (window_height/2), 'playbutton.png', Game)
 
-grid_width = 2
-grid_height = 2
-grid = [[0 for _ in range(grid_width)] for _ in range(grid_height)]
-x = random.randint(0, grid_width - 1)
-y = random.randint(0, grid_height - 1)
+class Obstacles:
+    def __init__ (self, type, image_path):
+        self.type = type
+        grid_width = 20
+        grid_height = 15
+        grid = [[0 for _ in range(grid_width)] for _ in range(grid_height)]
+        x = random.randint(0, grid_width - 1)
+        y = random.randint(0, grid_height - 1)
 
-if grid[0][0] == 1:
-    print("occupied")
-else:
-    print("empty")
+        if grid[0][0] == 0:
+            print("empty")
+        else:
+            x
+            y
+        
+        #Gets the image
+        self.image = pygame.image.load(image_path).convert_alpha()
+        #Makes the image 
+        self.rect = self.image.get_rect(center=(x, y))
+
+    def draw (self, surface):
+        surface.blit(self.image, self.rect)
+
+Wall = Obstacles(None, "motobike.png")
+        
 
 game_loop = True
 while game_loop:

@@ -11,6 +11,9 @@ grid [0][0] = 1
 
 if grid[y][x] == 1:
     print("occupied")
+    x = random.randint(0, grid_width - 1)
+    y = random.randint(0, grid_height - 1)
+    print(grid)
 else:
     print("empty")
     grid[y][x] = 1
