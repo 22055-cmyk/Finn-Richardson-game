@@ -74,6 +74,7 @@ def Exit():
 ExitButton = Button(((window_width * 1)/3), (window_height/2), 'exitbutton.png', Exit)
 PlayButton = Button(((window_width * 2)/3), (window_height/2), 'playbutton.png', Game)
 
+<<<<<<< HEAD
 class Obstacles:
     def __init__ (self, type, image_path):
         self.type = type
@@ -99,7 +100,6 @@ class Obstacles:
 
 Wall = Obstacles(None, "motobike.png")
         
-
 game_loop = True
 while game_loop:
     for event in pygame.event.get():
