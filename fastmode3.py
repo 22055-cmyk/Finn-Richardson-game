@@ -74,7 +74,6 @@ def Exit():
 ExitButton = Button(((window_width * 1)/3), (window_height/2), 'exitbutton.png', Exit)
 PlayButton = Button(((window_width * 2)/3), (window_height/2), 'playbutton.png', Game)
 
-<<<<<<< HEAD
 class Obstacles:
     def __init__ (self, type, image_path):
         self.type = type
@@ -83,22 +82,32 @@ class Obstacles:
         grid = [[0 for _ in range(grid_width)] for _ in range(grid_height)]
         x = random.randint(0, grid_width - 1)
         y = random.randint(0, grid_height - 1)
-
-        if grid[0][0] == 0:
-            print("empty")
-        else:
-            x
-            y
+        cell_size = 50
+        window_grid_x = x*cell_size
+        window_grid_y = y*cell_size
         
+        no_cells = 0
+        loop = True
+        while loop:
+            
+            if grid[x][y] == 0:
+                print("empty")
+                no_cells + 1
+            else:
+                x
+                y
+        
+
+
         #Gets the image
         self.image = pygame.image.load(image_path).convert_alpha()
         #Makes the image 
-        self.rect = self.image.get_rect(center=(x, y))
+        self.rect = self.image.get_rect(center=(window_grid_x, window_grid_y))
 
     def draw (self, surface):
         surface.blit(self.image, self.rect)
 
-Wall = Obstacles(None, "motobike.png")
+Wall = Obstacles(None, "wall.png")
         
 game_loop = True
 while game_loop:
