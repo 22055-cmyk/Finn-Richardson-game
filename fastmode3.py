@@ -89,17 +89,8 @@ class Obstacles:
         #Draws the grid of 0's to the size of the gri defined.
         grid = [[0 for _ in range(grid_width)] for _ in range(grid_height)]
         
-        #Generates a random position to place a 1 in the grid.
-        x = random.randint(0, grid_width - 1)
-        y = random.randint(0, grid_height - 1)
-        
         #Defines the size of each cell / 0 to take up. There is 50 pixel distance between each 0 when drawn on the window.
         cell_size = 50
-
-        #Defines the rect size of the image I will be using for the placed obstacle.
-        #It gets the x and y coordinate and multiplies by 50 (the size of the cell) so the cell is placed in the spot on the window if each cell were 50 in size.
-        window_grid_x = x*cell_size
-        window_grid_y = y*cell_size
         
         #Number of cells at the moment.
         no_cells = 0
@@ -109,31 +100,33 @@ class Obstacles:
         #The loop for checking if space is empty or occupied, if empty it should place, and places a maximum of how many cells I want by defining in the max_cells.
         loop = True
         
-        while loop:
-            for event in pygame.event.get():
-                
-                if event.type == pygame.QUIT:
-                    loop = False
+        while no_cells <= max_cells:
+            #Generates a random position to place a 1 in the grid.
+            x = random.randint(0, grid_width - 1)
+            y = random.randint(0, grid_height - 1)
             
-            if no_cells >= max_cells:
-                loop = False
-            
+            #Defines the rect size of the image I will be using for the placed obstacle. It gets the x and y coordinate and multiplies by 50 (the size of the cell) so the cell is placed in the spot on the window if each cell were 50 in size.
+            window_grid_x = x*cell_size
+            window_grid_y = y*cell_size
+
             no_cells += 1
             
-            
             if grid[x][y] == 0:
-                print("empty")
-
-            else:
+                print(f"empty {x, y}")
+                
+                
                 x
                 y
-            
-        loop = False
+            else:
+                x
+                y    
+        
         
         #Gets the image 
         self.image = pygame.image.load(image_path).convert_alpha()
         #Makes the image in the coordinates defined earlier
         self.rect = self.image.get_rect(center=(window_grid_x, window_grid_y))
+
 
     def draw (self, surface):
         surface.blit(self.image, self.rect)
