@@ -1,6 +1,7 @@
 import sys
 import pygame
 import random
+import time
 
 
 pygame.init()
@@ -51,15 +52,17 @@ class Button:
 def Game():
     #Creates Game loop
     game_screen = True
+    screen.fill(screen_colour)
+    #Draws the obstacle class by generating random position and placing in random position.
+    Wall = Obstacles(None, "wall.png", screen)
+    pygame.display.update() 
+    
     while game_screen:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_screen = False
                 pygame.quit()
-        screen.fill(screen_colour)
-        #Draws the obstacle class by generating random position and placing in random position.
-        Wall.draw(screen)
-        pygame.display.update()        
+               
         
 def Exit():
     #If you use exit function then the game will exit.
@@ -78,60 +81,59 @@ class Obstacles:
     """THis code creates a grid of 1's and 0's and will randomly place a wall in one of the grid segments
     This class is
     """
-    def __init__ (self, type, image_path):
+    def __init__ (self, type, image_path, surface):
         #Checks what type of obstacle i will be placing.
         self.type = type
-        
+        #Defines the size of each cell / 0 to take up. There is 50 pixel distance between each 0 when drawn on the window.
+        cell_size = 50
+        window_grid_x = 0
+        window_grid_y = 0
+
         #Defines the size of the grid, the dimensions of the window divided by 50.
         grid_width = 20
         grid_height = 15
-        
         #Draws the grid of 0's to the size of the gri defined.
         grid = [[0 for _ in range(grid_width)] for _ in range(grid_height)]
-        
-        #Defines the size of each cell / 0 to take up. There is 50 pixel distance between each 0 when drawn on the window.
-        cell_size = 50
         
         #Number of cells at the moment.
         no_cells = 0
         #Maximum cells I want to be placed.
-        max_cells = 20
+        max_cells = 50
         
-        #The loop for checking if space is empty or occupied, if empty it should place, and places a maximum of how many cells I want by defining in the max_cells.
-        loop = True
-        
+        #If there is too many 1s it will stop the loop
         while no_cells <= max_cells:
+
             #Generates a random position to place a 1 in the grid.
             x = random.randint(0, grid_width - 1)
             y = random.randint(0, grid_height - 1)
             
-            #Defines the rect size of the image I will be using for the placed obstacle. It gets the x and y coordinate and multiplies by 50 (the size of the cell) so the cell is placed in the spot on the window if each cell were 50 in size.
-            window_grid_x = x*cell_size
-            window_grid_y = y*cell_size
-
+            #Adds 1 to no_cells for every time this while loops
             no_cells += 1
-            
-            if grid[x][y] == 0:
+
+            #If where the 1 wants to place is occupied then it will not place and instead generate a new random set of coordinates.
+            if grid[y][x] == 1:
+                print(f"occupied {x, y}")
+                x = random.randint(0, grid_width - 1)
+                y = random.randint(0, grid_height - 1)
+                print(f"new {x, y}")
+            #If its empty it places the obstacle
+            elif grid[y][x] == 0:
                 print(f"empty {x, y}")
+                grid[y][x] = 1
+                window_grid_x = x * cell_size
+                window_grid_y = y * cell_size
                 
+                #Gets the image 
+                self.image = pygame.image.load(image_path).convert_alpha()
                 
-                x
-                y
-            else:
-                x
-                y    
-        
-        
-        #Gets the image 
-        self.image = pygame.image.load(image_path).convert_alpha()
-        #Makes the image in the coordinates defined earlier
-        self.rect = self.image.get_rect(center=(window_grid_x, window_grid_y))
+                #Makes the image in the coordinates defined earlier, window_grid_x/y is the grid width multiplied by the cell size to make it fit on the window.
+                self.rect = self.image.get_rect(center=(window_grid_x, window_grid_y))
+                
+                surface.blit(self.image, self.rect)
+    
+    #total_cells = grid.count(1)
+    #print(total_cells)
 
-
-    def draw (self, surface):
-        surface.blit(self.image, self.rect)
-
-Wall = Obstacles(None, "wall.png")
 
 fpsClock.tick(60)
 
