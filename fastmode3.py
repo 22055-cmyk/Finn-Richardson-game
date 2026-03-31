@@ -13,7 +13,7 @@ fpsClock = pygame.time.Clock()
 window_width = 1000
 window_height = 750
 screen = pygame.display.set_mode((window_width, window_height))
-screen_colour = (0, 0, 0)
+screen_colour = (20, 20, 20)
 
 class Button:
     """this code creates a button blueprint
@@ -54,7 +54,7 @@ def Game():
     game_screen = True
     screen.fill(screen_colour)
     #Draws the obstacle class by generating random position and placing in random position.
-    Wall = Obstacles(None, "wall.png", screen)
+    Wall = Obstacles(Wall, "wall.png", screen)
     pygame.display.update() 
     
     while game_screen:
@@ -116,6 +116,7 @@ class Obstacles:
                 x = random.randint(0, grid_width - 1)
                 y = random.randint(0, grid_height - 1)
                 print(f"new {x, y}")
+            
             #If its empty it places the obstacle
             elif grid[y][x] == 0:
                 print(f"empty {x, y}")
@@ -127,12 +128,18 @@ class Obstacles:
                 self.image = pygame.image.load(image_path).convert_alpha()
                 
                 #Makes the image in the coordinates defined earlier, window_grid_x/y is the grid width multiplied by the cell size to make it fit on the window.
-                self.rect = self.image.get_rect(center=(window_grid_x, window_grid_y))
+                self.rect = self.image.get_rect(center=(window_grid_x + (cell_size / 2), window_grid_y + (cell_size / 2)))
                 
+                #Puts image in dimnsions of the image rect and places image rect on the screen
                 surface.blit(self.image, self.rect)
-    
-    #total_cells = grid.count(1)
-    #print(total_cells)
+
+                time.sleep(0.05)
+
+                pygame.display.update()
+
+        if self.type == 'Wall':
+            grid[0:20] = 1
+
 
 
 fpsClock.tick(60)
@@ -146,6 +153,7 @@ while game_loop:
         if event.type == pygame.MOUSEBUTTONDOWN:
             ExitButton.check_click(event.pos)
             PlayButton.check_click(event.pos)
+    screen.fill(screen_colour)
     ExitButton.draw(screen)
     PlayButton.draw(screen)
     pygame.display.update()
