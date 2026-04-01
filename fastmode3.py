@@ -54,7 +54,7 @@ def Game():
     game_screen = True
     screen.fill(screen_colour)
     #Draws the obstacle class by generating random position and placing in random position.
-    Wall = Obstacles(Wall, "wall.png", screen)
+    Wall = Obstacle("wall.png", screen, True)
     pygame.display.update() 
     
     while game_screen:
@@ -77,13 +77,11 @@ def Exit():
 ExitButton = Button(((window_width * 1)/3), (window_height/2), 'exitbutton.png', Exit)
 PlayButton = Button(((window_width * 2)/3), (window_height/2), 'playbutton.png', Game)
 
-class Obstacles:
+class Obstacle:
     """THis code creates a grid of 1's and 0's and will randomly place a wall in one of the grid segments
     This class is
     """
-    def __init__ (self, type, image_path, surface):
-        #Checks what type of obstacle i will be placing.
-        self.type = type
+    def __init__ (self, image_path, surface, random_adjacent):
         #Defines the size of each cell / 0 to take up. There is 50 pixel distance between each 0 when drawn on the window.
         cell_size = 50
         window_grid_x = 0
@@ -92,7 +90,7 @@ class Obstacles:
         #Defines the size of the grid, the dimensions of the window divided by 50.
         grid_width = 20
         grid_height = 15
-        #Draws the grid of 0's to the size of the gri defined.
+        #Draws the grid of 0's to the size of the grid defined.
         grid = [[0 for _ in range(grid_width)] for _ in range(grid_height)]
         
         #Number of cells at the moment.
@@ -112,13 +110,19 @@ class Obstacles:
 
             #If where the 1 wants to place is occupied then it will not place and instead generate a new random set of coordinates.
             if grid[y][x] == 1:
-                print(f"occupied {x, y}")
-                x = random.randint(0, grid_width - 1)
-                y = random.randint(0, grid_height - 1)
-                print(f"new {x, y}")
-            
+                #If I define as true then this will select a random cell adjacent to the occupied cell
+                if random_adjacent == True:
+                    raise NotImplementedError("Subclasses must implement this method")
+                
+                else:
+                    print(f"occupied {x, y}")
+                    x = random.randint(0, grid_width - 1)
+                    y = random.randint(0, grid_height - 1)
+                    print(f"new {x, y}")
+                
             #If its empty it places the obstacle
             elif grid[y][x] == 0:
+                
                 print(f"empty {x, y}")
                 grid[y][x] = 1
                 window_grid_x = x * cell_size
@@ -137,8 +141,15 @@ class Obstacles:
 
                 pygame.display.update()
 
-        if self.type == 'Wall':
-            grid[0:20] = 1
+    #def special(self):
+
+
+class Wall(Obstacle):
+    def __init__ (self, image_path, surface):
+
+        super().__init__
+
+    
 
 
 
