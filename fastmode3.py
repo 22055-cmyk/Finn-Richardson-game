@@ -54,7 +54,8 @@ def Game():
     game_screen = True
     screen.fill(screen_colour)
     #Draws the obstacle class by generating random position and placing in random position.
-    Wall = Obstacle("wall.png", screen, True)
+    Wall = Obstacle("wall.png", screen, False)
+    Void = Obstacle("void.png", screen, False)
     pygame.display.update() 
     
     while game_screen:
@@ -97,7 +98,7 @@ class Obstacle:
         no_cells = 0
         #Maximum cells I want to be placed.
         max_cells = 50
-        
+    
         #If there is too many 1s it will stop the loop
         while no_cells <= max_cells:
 
@@ -134,10 +135,11 @@ class Obstacle:
                 #Makes the image in the coordinates defined earlier, window_grid_x/y is the grid width multiplied by the cell size to make it fit on the window.
                 self.rect = self.image.get_rect(center=(window_grid_x + (cell_size / 2), window_grid_y + (cell_size / 2)))
                 
-                #Puts image in dimnsions of the image rect and places image rect on the screen
+                #Puts image in dimensions of the image rect and places image rect on the screen
                 surface.blit(self.image, self.rect)
 
-                time.sleep(0.05)
+                #Adds a delay between placing obstacles
+                time.sleep(0.01)
 
                 pygame.display.update()
 
@@ -148,6 +150,8 @@ class Wall(Obstacle):
     def __init__ (self, image_path, surface):
 
         super().__init__
+
+
 
     
 
