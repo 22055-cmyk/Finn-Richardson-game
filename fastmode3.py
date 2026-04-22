@@ -1,4 +1,4 @@
-import sys
+
 import pygame
 import random
 import time
@@ -54,8 +54,8 @@ def Game():
     game_screen = True
     screen.fill(screen_colour)
     #Draws the obstacle class by generating random position and placing in random position.
-    Wall = Obstacle("wall.png", screen, False)
-    Void = Obstacle("void.png", screen, False)
+    Wall = Obstacle("wall.png", screen, True)
+    Void = Obstacle("void.png", screen, True)
     pygame.display.update() 
     
     while game_screen:
@@ -83,6 +83,8 @@ class Obstacle:
     This class is
     """
     def __init__ (self, image_path, surface, random_adjacent):
+        
+        self.random_adjacent = random_adjacent
         #Defines the size of each cell / 0 to take up. There is 50 pixel distance between each 0 when drawn on the window.
         cell_size = 50
         window_grid_x = 0
@@ -113,7 +115,11 @@ class Obstacle:
             if grid[y][x] == 1:
                 #If I define as true then this will select a random cell adjacent to the occupied cell
                 if random_adjacent == True:
-                    raise NotImplementedError("Subclasses must implement this method")
+                    if grid[y-1][x-1][y+1][x+1] >= 3:
+                        print("random spot available")
+                    else:
+                        print ("fully surrounded, by BBC")
+                    
                 
                 else:
                     print(f"occupied {x, y}")
