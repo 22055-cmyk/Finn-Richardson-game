@@ -1,0 +1,51 @@
+import random
+import time
+
+random_adjacent = True
+
+#Defines the size of the grid, the dimensions of the window divided by 50.
+grid_width = 20
+grid_height = 15
+#Draws the grid of 0's to the size of the grid defined.
+grid = [[0 for _ in range(grid_width)] for _ in range(grid_height)]
+        
+#Number of cells at the moment.
+no_cells = 0
+#Maximum cells I want to be placed.
+max_cells = 50
+    
+#If there is too many 1s it will stop the loop
+while no_cells <= max_cells:
+
+    coordinates = (random.randint(0, grid_width - 1), random.randint(0, grid_height - 1))
+    x = (coordinates[0])
+    y = (coordinates[1])
+    #Adds 1 to no_cells for every time this while loops
+    no_cells += 1
+
+    #If where the 1 wants to place is occupied then it will not place and instead generate a new random set of coordinates.
+    if grid[y][x] == 1:
+
+        if random_adjacent == True:
+
+            directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+            coordinates + directions[0]
+            if grid[y][x] == 1:
+                coordinates + directions[1]
+                if grid[y][x] == 1:
+                    coordinates + directions[2]
+                    if grid[y][x] == 1:
+                        coordinates + directions[3]
+                    else:
+                        
+
+        else:
+            coordinates
+            print (f"new coords: {coordinates}")
+            grid[y][x] = 1
+
+    elif grid[y][x] == 0:
+        grid[y][x] = 1
+        print (f"placed 1 here: {coordinates}")
+
+    time.sleep(0.5)

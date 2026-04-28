@@ -116,9 +116,8 @@ class Obstacle:
                 #If I define as true then this will select a random cell adjacent to the occupied cell
                 if random_adjacent == True:
                     directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-                    if x + directions[0, 1] == 0: 
+                    if grid[y][x] + directions[0] == 0: 
                         print("random spot available")
-                        print([x])
                     else:
                         print ("fully surrounded, by BBC")
                     
