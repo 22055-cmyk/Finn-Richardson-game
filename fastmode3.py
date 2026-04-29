@@ -113,8 +113,10 @@ class Obstacle:
 
             #If where the 1 wants to place is occupied then it will not place and instead generate a new random set of coordinates.
             if grid[y][x] == 1:
+                
                 #If I define as true then this will select a random cell adjacent to the occupied cell
                 if random_adjacent == True:
+                    
                     directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
                     if grid[y][x] + directions[0] == 0: 
                         print("random spot available")
