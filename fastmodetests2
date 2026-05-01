@@ -19,16 +19,28 @@ while no_cells <= max_cells:
 
     #the coordinates are generated randomly as sets of (x,y)
     coordinates = (random.randint(0, grid_width - 1), random.randint(0, grid_height - 1))
+
+
+    #Adds the values of the cardinal directions to the coordinates, so i get 4 new coordinates that are on all different sides of the original
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    coords_up = tuple(a + b for a, b in zip(coordinates, directions[3]))
+    coords_down = tuple(a + b for a, b in zip(coordinates, directions[2]))
+    coords_left = tuple(a + b for a, b in zip(coordinates, directions[0]))
+    coords_right = tuple(a + b for a, b in zip(coordinates, directions[1]))
+    
     
     #coordinates are converted to the position on the grid list, because you can't assign the value (x,y) 1 or 0, in a list it can do this.
-    x = (coordinates[0])
-    y = (coordinates[1])
+    x = (coordinates[0], coords_up[0], coords_down[0], coords_right[0], coords_left[0])
+    y = (coordinates[1], coords_up[1], coords_down[1], coords_right[1], coords_left[1])
     
     #Adds 1 to no_cells for every time this while loops
     no_cells += 1
-
-    #If where the 1 wants to place is occupied then it will not place and instead generate a new random set of coordinates.
-    if grid[y][x] == 1:
+    
+    
+    """If where the 1 wants to place is occupied then it will not place and instead generate a new random set of coordinates.
+    x and y have multiple values based on whether you want the center or cardinal directions, 0 for center (original coordinates), 1 for up, 2 for down, 3 for right, 4 for left.
+    """
+    if grid[y[0]][x[0]] == 1:
         
         print(f"{coordinates}: space occupied")
         
@@ -36,13 +48,8 @@ while no_cells <= max_cells:
             
             print("random_adjacent = True")
             
-            directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-            coords_up = tuple(a + b for a, b in zip(coordinates, directions[3]))
-            coords_down = tuple(a + b for a, b in zip(coordinates, directions[2]))
-            coords_left = tuple(a + b for a, b in zip(coordinates, directions[0]))
-            coords_right = tuple(a + b for a, b in zip(coordinates, directions[1]))
+            
 
-            print(f"new coords up{coords_up}")
 
             if grid[y][x] == 1:
                 
@@ -63,8 +70,8 @@ while no_cells <= max_cells:
             print (f"new coords: {coordinates}")
             grid[y][x] = 1
 
-    elif grid[y][x] == 0:
-        grid[y][x] = 1
+    elif grid[y[0]][x[0]] == 0:
+        grid[y[0]][x[0]] = 1
         print (f"placed 1 here: {coordinates}")
 
     time.sleep(0.1)
