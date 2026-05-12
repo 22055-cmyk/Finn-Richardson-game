@@ -4,15 +4,15 @@ import time
 random_adjacent = True
 
 #Defines the size of the grid, the dimensions of the window divided by 50.
-grid_width = 20
-grid_height = 15
+grid_width = 5
+grid_height = 5
 #Draws the grid of 0's to the size of the grid defined.
 grid = [[0 for _ in range(grid_width)] for _ in range(grid_height)]
         
 #Number of cells at the moment.
 no_cells = 0
 #Maximum cells I want to be placed.
-max_cells = 50
+max_cells = 5
     
 #If there is too many 1s it will stop the loop
 while no_cells <= max_cells:
@@ -32,7 +32,7 @@ while no_cells <= max_cells:
     #coordinates are converted to the position on the grid list, because you can't assign the value (x,y) 1 or 0, in a list it can do this.
     x = (coordinates[0], coords_up[0], coords_down[0], coords_right[0], coords_left[0])
     y = (coordinates[1], coords_up[1], coords_down[1], coords_right[1], coords_left[1])
-    
+
     #Adds 1 to no_cells for every time this while loops
     no_cells += 1
     
@@ -50,7 +50,7 @@ while no_cells <= max_cells:
 
             if grid[y[1]][x[1]] == 0:
                 grid[y[1]][x[1]] = 1
-                print("placed up")
+                print(f"placed up: {x[1], y[1]}")
                 random_adjacent = False
 
             elif grid[y[2]][x[2]] == 0:
@@ -73,7 +73,8 @@ while no_cells <= max_cells:
                         
 
         else:
-            print("random_adjacent = False")
+            print("failed")
+            print(grid)
             coordinates = (random.randint(0, grid_width - 1), random.randint(0, grid_height - 1))
             
             grid[y[0]][x[0]] = 1
