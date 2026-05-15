@@ -133,16 +133,47 @@ class Obstacle:
         
                 if random_adjacent == True:
             
-                    print("random_adjacent = True")                    
+                    print("random_adjacent = True")
+                    
+                    if grid[y[1]][x[1]] == 0:
+                        grid[y[1]][x[1]] = 1
+                        print(f"placed up: {x[1], y[1]}")
+                        random_adjacent = False
+
+                    elif grid[y[2]][x[2]] == 0:
+                        grid[y[2]][x[2]] = 1
+                        print("placed down, position up occupied")
+                        random_adjacent = False
+
+                    elif grid[y[3]][x[3]] == 0:
+                        grid[y[3]][x[3]] = 1
+                        print("placed east, positions up and down occupied")
+                        random_adjacent = False
+
+                    elif grid[y[4]][x[4]] == 0:
+                        grid[y[4]][x[4]] = 1
+                        print("placed left, all other positions occupied")
+                        random_adjacent = False
+                    else:
+                        print("panic!!!")
+
+                else:
+                    print("failed")
+                    print(grid)
+                    coordinates = (random.randint(0, grid_width - 1), random.randint(0, grid_height - 1))
             
+                    grid[y[0]][x[0]] = 1
+                    print (f"new coords: {coordinates}")
                 
             #If its empty it places the obstacle
             elif grid[y[0]][x[0]] == 0:
                 
                 
                 grid[y[0]][x[0]] = 1
-                window_grid_x = x * cell_size
-                window_grid_y = y * cell_size
+                
+                #
+                window_grid_x = x[0] * cell_size
+                window_grid_y = y[0] * cell_size
                 
                 #Gets the image 
                 self.image = pygame.image.load(image_path).convert_alpha()

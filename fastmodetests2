@@ -66,6 +66,9 @@ while no_cells <= max_cells:
             elif grid[y[4]][x[4]] == 0:
                 grid[y[4]][x[4]] = 1
                 print("placed left, all other positions occupied")
+                random_adjacent = False
+            else:
+                print("panic!!!")
                
 
             
