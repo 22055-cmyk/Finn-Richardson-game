@@ -102,7 +102,7 @@ class Obstacle:
         max_cells = 50
     
         #If there is too many 1s it will stop the loop
-        while no_cells <= max_cells:
+        while no_cells < max_cells:
 
             #the coordinates are generated randomly as sets of (x,y)
             coordinates = (random.randint(0, grid_width - 1), random.randint(0, grid_height - 1))
@@ -159,7 +159,6 @@ class Obstacle:
 
                 else:
                     print("failed")
-                    print(grid)
                     coordinates = (random.randint(0, grid_width - 1), random.randint(0, grid_height - 1))
             
                     grid[y[0]][x[0]] = 1
@@ -168,9 +167,8 @@ class Obstacle:
             #If its empty it places the obstacle
             elif grid[y[0]][x[0]] == 0:
                 
-                
                 grid[y[0]][x[0]] = 1
-                
+                print (f"placed 1 here: {coordinates}")
                 #
                 window_grid_x = x[0] * cell_size
                 window_grid_y = y[0] * cell_size
@@ -186,8 +184,12 @@ class Obstacle:
 
                 #Adds a delay between placing obstacles
                 time.sleep(0.01)
-
                 pygame.display.update()
+            
+        for row in grid:
+            print(*row, sep=" ")
+
+                
 
     #def special(self):
 

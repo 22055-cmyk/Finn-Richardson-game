@@ -15,7 +15,7 @@ no_cells = 0
 max_cells = 5
     
 #If there is too many 1s it will stop the loop
-while no_cells <= max_cells:
+while no_cells < max_cells:
 
     #the coordinates are generated randomly as sets of (x,y)
     coordinates = (random.randint(0, grid_width - 1), random.randint(0, grid_height - 1))
@@ -40,7 +40,7 @@ while no_cells <= max_cells:
     """If where the 1 wants to place is occupied then it will not place and instead generate a new random set of coordinates.
     x and y have multiple values based on whether you want the center or cardinal directions, 0 for center (original coordinates), 1 for up, 2 for down, 3 for right, 4 for left.
     """
-    if grid[y[0]][x[0]] == 1:
+    if grid[x[0]][y[0]] == 1:
         
         print(f"{coordinates}: space occupied")
         
@@ -48,23 +48,23 @@ while no_cells <= max_cells:
             
             print("random_adjacent = True")
 
-            if grid[y[1]][x[1]] == 0:
-                grid[y[1]][x[1]] = 1
+            if grid[x[1]][y[1]] == 0:
+                grid[x[1]][y[1]] = 1
                 print(f"placed up: {x[1], y[1]}")
                 random_adjacent = False
 
-            elif grid[y[2]][x[2]] == 0:
-                grid[y[2]][x[2]] = 1
+            elif grid[x[2]][y[2]] == 0:
+                grid[x[2]][y[2]] = 1
                 print("placed down, position up occupied")
                 random_adjacent = False
 
-            elif grid[y[3]][x[3]] == 0:
-                grid[y[3]][x[3]] = 1
+            elif grid[x[3]][y[3]] == 0:
+                grid[x[3]][y[3]] = 1
                 print("placed east, positions up and down occupied")
                 random_adjacent = False
 
-            elif grid[y[4]][x[4]] == 0:
-                grid[y[4]][x[4]] = 1
+            elif grid[x[4]][y[4]] == 0:
+                grid[x[4]][y[4]] = 1
                 print("placed left, all other positions occupied")
                 random_adjacent = False
             else:
@@ -77,14 +77,17 @@ while no_cells <= max_cells:
 
         else:
             print("failed")
-            print(grid)
+            
             coordinates = (random.randint(0, grid_width - 1), random.randint(0, grid_height - 1))
             
-            grid[y[0]][x[0]] = 1
+            grid[x[0]][y[0]] = 1
             print (f"new coords: {coordinates}")
 
-    elif grid[y[0]][x[0]] == 0:
-        grid[y[0]][x[0]] = 1
+    elif grid[x[0]][y[0]] == 0:
+        grid[x[0]][y[0]] = 1
         print (f"placed 1 here: {coordinates}")
 
     time.sleep(0.1)
+
+for row in grid:
+    print(*row, sep=" ")
