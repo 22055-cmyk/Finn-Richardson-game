@@ -1,8 +1,6 @@
-
 import pygame
 import random
 import time
-
 
 pygame.init()
 
@@ -53,9 +51,13 @@ def Game():
     #Creates Game loop
     game_screen = True
     screen.fill(screen_colour)
+    
+    #Draws the grid of 0's to the size of the grid defined.
+    global_grid = [[0 for _ in range(20)] for _ in range(15)]
+
     #Draws the obstacle class by generating random position and placing in random position.
-    Wall = Obstacle("wall.png", screen, True)
-    Void = Obstacle("void.png", screen, True)
+    Void = Obstacle("void.png", screen, True, global_grid)
+    Wall = Obstacle("wall.png", screen, True, global_grid)
     pygame.display.update() 
     
     while game_screen:
@@ -70,9 +72,6 @@ def Exit():
     print("exit")
     pygame.quit()
 
-
-
-
 #Setting all the positions to be changable if i chaange the window size of want to quickly change the size of the button themselves
 #(x, y, width, height, text, difficulty, onclickFunction, rect_colour, text_colour)
 ExitButton = Button(((window_width * 1)/3), (window_height/2), 'exitbutton.png', Exit)
@@ -82,7 +81,7 @@ class Obstacle:
     """THis code creates a grid of 1's and 0's and will randomly place a wall in one of the grid segments
     This class is
     """
-    def __init__ (self, image_path, surface, random_adjacent):
+    def __init__ (self, image_path, surface, random_adjacent, game_grid):
         
         self.random_adjacent = random_adjacent
         #Defines the size of each cell / 0 to take up. There is 50 pixel distance between each 0 when drawn on the window.
@@ -90,11 +89,10 @@ class Obstacle:
         window_grid_x = 0
         window_grid_y = 0
 
-        #Defines the size of the grid, the dimensions of the window divided by 50.
         grid_width = 20
         grid_height = 15
-        #Draws the grid of 0's to the size of the grid defined.
-        grid = [[0 for _ in range(grid_width)] for _ in range(grid_height)]
+
+        grid = game_grid
         
         #Number of cells at the moment.
         no_cells = 0
@@ -120,14 +118,12 @@ class Obstacle:
             coords_down_and_left = tuple(a + b for a, b in zip(coordinates, directions[5]))
             coords_down_and_right = tuple(a + b for a, b in zip(coordinates, directions[4]))
     
-    
             #coordinates are converted to the position on the grid list, because you can't assign the value (x,y) 1 or 0, in a list it can do this.
             x = (coordinates[0], coords_up[0], coords_down[0], coords_right[0], coords_left[0], coords_up_and_left[0], coords_up_and_right[0], coords_down_and_left[0], coords_down_and_right[0])
             y = (coordinates[1], coords_up[1], coords_down[1], coords_right[1], coords_left[1], coords_up_and_left[1], coords_up_and_right[1], coords_down_and_left[1], coords_down_and_right[1])
     
             #Adds 1 to no_cells for every time this while loops
             no_cells += 1
-    
     
             """If where the 1 wants to place is occupied then it will not place and instead generate a new random set of coordinates.
             x and y have multiple values based on whether you want the center or cardinal directions, 0 for center (original coordinates), 1 for up, 2 for down, 3 for right, 4 for left.
@@ -137,13 +133,17 @@ class Obstacle:
                 print(f"{coordinates}: space occupied")
         
                 if random_adjacent == True:
-            
-                    print("random_adjacent = True")
-                    print(f"DEBUG - Checking Up:    y={y[1]}, x={x[1]} -> Grid value: {grid[y[1]][x[1]]}")
-                    print(f"DEBUG - Checking Down:  y={y[2]}, x={x[2]} -> Grid value: {grid[y[2]][x[2]]}")
-                    print(f"DEBUG - Checking Right: y={y[3]}, x={x[3]} -> Grid value: {grid[y[3]][x[3]]}")
-                    print(f"DEBUG - Checking Left:  y={y[4]}, x={x[4]} -> Grid value: {grid[y[4]][x[4]]}")
-
+                    try:
+                        print("random_adjacent = True")
+                        print(f"DEBUG - Checking Up:    y={y[1]}, x={x[1]} -> Grid value: {grid[y[1]][x[1]]}")
+                        print(f"DEBUG - Checking Down:  y={y[2]}, x={x[2]} -> Grid value: {grid[y[2]][x[2]]}")
+                        print(f"DEBUG - Checking Right: y={y[3]}, x={x[3]} -> Grid value: {grid[y[3]][x[3]]}")
+                        print(f"DEBUG - Checking Left:  y={y[4]}, x={x[4]} -> Grid value: {grid[y[4]][x[4]]}")
+                    except IndexError:
+                        print("you just tried to go outside the grid bum")
+                    except:
+                        print("Something else went wrong")
+                
                     if grid[y[1]][x[1]] == 0:
                         grid[y[1]][x[1]] = 1
                         print(f"placed up: {x[1], y[1]}")
@@ -166,9 +166,9 @@ class Obstacle:
                 else:
                     print("failed")
                     coordinates = (random.randint(0, grid_width - 1), random.randint(0, grid_height - 1))
-            
-                    grid[y[0]][x[0]] = 1
-                    print (f"new coords: {coordinates}")
+                    
+                    #continue means that this loop will stop and start the next by ending it here
+                    continue
                 
             #If its empty it places the obstacle
             elif grid[y[0]][x[0]] == 0:
@@ -194,23 +194,14 @@ class Obstacle:
 
         #this code makes the grid look nice by removing all the brackets and ensuring each line is below the next so its not all in one big line :)    
         for row in grid:
-            print(*row, sep=" ")
-
-                
+            print(*row, sep=" ")    
 
     #def special(self):
-
 
 class Wall(Obstacle):
     def __init__ (self, image_path, surface):
 
         super().__init__
-
-
-
-    
-
-
 
 fpsClock.tick(60)
 
