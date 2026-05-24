@@ -54,10 +54,10 @@ def Game(): #Creates Game loop
     global_grid = [[0 for _ in range(20)] for _ in range(15)] #Draws the grid of 0's to the size of the grid defined.
 
     #Draws the obstacle class by generating random position and placing in random position.
+    Orb = Obstacle("orb.png", False, global_grid, 3, 5)
     Void = Obstacle("void.png", True, global_grid, 2, 50)
     Wall = Obstacle("wall.png", True, global_grid, 1, 50)
-    Orb = Obstacle("orb.png", False, global_grid, 3, 5)
-
+    
     Void.draw(screen)
     Wall.draw(screen)
     Orb.draw(screen)
@@ -105,6 +105,11 @@ class Obstacle:
             
             #If its empty it places the obstacle
             if self.game_grid[center_y][center_x] == 0:
+
+                self.orb_radius(center_x, center_y, grid_width, grid_height)
+                if obstacle_id != 3 and self.orb_aura == True:
+                    continue #restarts while loop
+
                 self.game_grid[center_y][center_x] = obstacle_id
                 placed_cells += 1  #Adds 1 to placed_cells for every time this while loops
             
@@ -118,6 +123,11 @@ class Obstacle:
 
                     if 0 <= adjacent_x < grid_width and 0 <= adjacent_y < grid_height:
                         if self.game_grid[adjacent_y][adjacent_x] == 0:
+
+                            self.orb_radius(center_x, center_y, grid_width, grid_height)
+                            if obstacle_id != 3 and self.orb_aura == True:
+                                continue #restarts while loop
+
                             self.game_grid[adjacent_y][adjacent_x] = obstacle_id
                             placed_cells += 1
                             placed_adjacent = True
@@ -133,12 +143,31 @@ class Obstacle:
         #how many walls and voids have been placed
         total_walls = sum(row.count(1) for row in self.game_grid)
         total_voids = sum(row.count(2) for row in self.game_grid)
+        total_orbs = sum(row.count(3) for row in self.game_grid)
 
-        print(f"Walls: {total_walls} | Voids: {total_voids}")
+        print(f"Walls: {total_walls} | Voids: {total_voids} | Orbs: {total_orbs}")
 
         #this code makes the grid look nice by removing all the brackets and ensuring each line is below the next so its not all in one big line :)    
         for row in self.game_grid:
             print(*row, sep=" ")    
+
+    def orb_radius(self, center_x, center_y, grid_width, grid_height):
+        
+        self.orb_aura = False
+        
+        if self.game_grid[center_y][center_x] == 3:
+            self.orb_aura = True
+
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (1, 1), (1, -1), (-1, 1), (-1, -1)]
+        for direction_x, direction_y in directions:
+            adjacent_x, adjacent_y = center_x + direction_x, center_y + direction_y
+
+            if 0 <= adjacent_x < grid_width and 0 <= adjacent_y < grid_height:
+                if self.game_grid[adjacent_y][adjacent_x] == 3:
+                    self.orb_aura = True
+        
+        if self.orb_aura == True:
+            pass
 
     def draw(self, surface):
         """
@@ -163,7 +192,7 @@ class Obstacle:
                     surface.blit(self.image, self.rect)
 
                     #Adds a delay between placing obstacles
-                    time.sleep(0.01)
+                    time.sleep(0.0167)
                     pygame.display.update()
 
 fpsClock.tick(60)
