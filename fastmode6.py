@@ -54,11 +54,13 @@ def Game(): #Creates Game loop
     global_grid = [[0 for _ in range(20)] for _ in range(15)] #Draws the grid of 0's to the size of the grid defined.
 
     #Draws the obstacle class by generating random position and placing in random position.
-    Void = Obstacle("void.png", True, global_grid, 2)
-    Wall = Obstacle("wall.png", True, global_grid, 1)
-    
+    Void = Obstacle("void.png", True, global_grid, 2, 50)
+    Wall = Obstacle("wall.png", True, global_grid, 1, 50)
+    Orb = Obstacle("orb.png", True, global_grid, 3, 5)
+
     Void.draw(screen)
     Wall.draw(screen)
+    Orb.draw(screen)
     pygame.display.update() 
     
     while game_screen:
@@ -80,7 +82,7 @@ class Obstacle:
     """THis code creates a grid of 1's and 0's and will randomly place a wall in one of the grid segments
     This class is
     """
-    def __init__ (self, image_path, random_adjacent, game_grid, obstacle_id):
+    def __init__ (self, image_path, random_adjacent, game_grid, obstacle_id, max_cells):
         self.image = pygame.image.load(image_path).convert_alpha() #Gets the image 
         self.random_adjacent = random_adjacent
         self.cell_size = 50 #Defines the size of each cell / 0 to take up. There is 50 pixel distance between each 0 when drawn on the window.
@@ -88,12 +90,13 @@ class Obstacle:
         self.window_grid_y = 0
         self.game_grid = game_grid
         self.obstacle_id = obstacle_id
-        
+        self.max_cells = max_cells #Maximum cells I want to be placed.
+
         grid_width = len(game_grid[0]) # 20
         grid_height = len(game_grid)   # 15
         
         placed_cells = 0  #Number of cells at the moment.
-        max_cells = 50  #Maximum cells I want to be placed.
+        
         
         while placed_cells < max_cells:  #If there is too many 1s it will stop the loop
             #generates random value for the x and y coordinate
