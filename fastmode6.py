@@ -56,7 +56,7 @@ def Game(): #Creates Game loop
     #Draws the obstacle class by generating random position and placing in random position.
     Void = Obstacle("void.png", True, global_grid, 2, 50)
     Wall = Obstacle("wall.png", True, global_grid, 1, 50)
-    Orb = Obstacle("orb.png", True, global_grid, 3, 5)
+    Orb = Obstacle("orb.png", False, global_grid, 3, 5)
 
     Void.draw(screen)
     Wall.draw(screen)
