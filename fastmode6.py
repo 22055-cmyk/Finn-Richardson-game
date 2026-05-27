@@ -10,7 +10,7 @@ fpsClock = pygame.time.Clock()
 
 window_width = 1000
 window_height = 750
-screen = pygame.display.set_mode((window_width, window_height))
+screen = pygame.display.set_mode((window_width, window_height), pygame.RESIZABLE | pygame.DOUBLEBUF)
 screen_colour = (20, 20, 20)
 
 class Button:
@@ -49,8 +49,6 @@ class Button:
 #These are the definitions 
 def Game(): #Creates Game loop
     game_screen = True
-    screen.fill(screen_colour)
-    
     global_grid = [[0 for _ in range(20)] for _ in range(15)] #Draws the grid of 0's to the size of the grid defined.
 
     #Draws the obstacle class by generating random position and placing in random position.
@@ -58,17 +56,24 @@ def Game(): #Creates Game loop
     Void = Obstacle("void.png", True, global_grid, 2, 50)
     Wall = Obstacle("wall.png", True, global_grid, 1, 50)
     
-    Void.draw(screen)
-    Wall.draw(screen)
-    Orb.draw(screen)
-    pygame.display.update() 
-    
     while game_screen:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_screen = False
                 pygame.quit()          
         
+        
+        screen.fill(screen_colour)
+        
+        Void.draw(screen)
+        Wall.draw(screen)
+        Orb.draw(screen)
+        
+        pygame.display.flip() 
+
+        fpsClock.tick(60)
+
+
 def Exit():  #If you use exit function then the game will exit.
     print("exit")
     pygame.quit()
@@ -190,10 +195,7 @@ class Obstacle:
                 
                     #Puts image in dimensions of the image rect and places image rect on the screen
                     surface.blit(self.image, self.rect)
-
-                    #Adds a delay between placing obstacles
-                    time.sleep(0.0167)
-                    pygame.display.update()
+                    
 
 fpsClock.tick(60)
 
