@@ -57,29 +57,46 @@ def Game(): # Creates Game loop
     Void = Obstacle("void.png", True, global_grid, 2, 50)
     Wall = Obstacle("wall.png", True, global_grid, 1, 50)
     
+    player_col = 0 #X position
+    player_row = 0 #Y position
+    
+    global_grid[player_row][player_col] = 4
+  
     while game_screen:
+        player_x_change = 0
+        player_y_change = 0
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_screen = False
                 pygame.quit()     
             if event.type == pygame.KEYDOWN:
-                if event.type == pygame.K_LEFT:
-                    player_x_change = -50
+                if event.key == pygame.K_LEFT:
+                    print("going left")
+                    player_x_change = -1
                     player_y_change = 0
-                if event.type == pygame.K_RIGHT:
-                    player_x_change = 50
+                if event.key == pygame.K_RIGHT:
+                    print("going right")
+                    player_x_change = 1
                     player_y_change = 0
-                if event.type == pygame.K_UP:
+                if event.key == pygame.K_UP:
+                    print("going up")
                     player_x_change = 0
-                    player_y_change = -50
-                if event.type == pygame.K_DOWN:
+                    player_y_change = -1
+                if event.key == pygame.K_DOWN:
+                    print("going down")
                     player_x_change = 0
-                    player_y_change = 50
+                    player_y_change = 1
 
-        player_x += player_x_change
-        player_y += player_y_change
+        player_col += player_x_change
+        player_row += player_y_change
+
+        print((player_col, player_row))
         
         screen.fill(screen_colour)
+        
+        global_grid
+        global_grid[player_row][player_col] = 4
         
         Player.draw(screen)
         Void.draw(screen)
@@ -89,7 +106,6 @@ def Game(): # Creates Game loop
         pygame.display.flip() 
 
         fpsClock.tick(60)
-
 
 
 def Exit():  # If you use exit function then the game will exit.
