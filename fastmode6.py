@@ -88,16 +88,18 @@ def Game(): # Creates Game loop
                     player_x_change = 0
                     player_y_change = 1
 
-        player_col += player_x_change
-        player_row += player_y_change
+        if player_x_change != 0 or player_y_change != 0:
+            new_col = player_col + player_x_change
+            new_row = player_row + player_y_change
 
-        print((player_col, player_row))
-        
+            print((player_col, player_row))
+
+            global_grid[player_row][player_col] = 0
+            player_col = new_col
+            player_row = new_row
+            global_grid[new_row][new_col] = 4
+
         screen.fill(screen_colour)
-        
-        global_grid
-        global_grid[player_row][player_col] = 4
-        
         Player.draw(screen)
         Void.draw(screen)
         Wall.draw(screen)
