@@ -86,24 +86,28 @@ def Game(): # Creates Game loop
                     print("going left")
                     player_x_change = -1
                     player_y_change = 0
+                    pygame.transform.rotate("motobike.png", 0)
                 if event.key == pygame.K_d:
                     print("going right")
                     player_x_change = 1
                     player_y_change = 0
+                    pygame.transform.rotate("motobike.png", 180)
                 if event.key == pygame.K_w:
                     print("going up")
                     player_x_change = 0
                     player_y_change = -1
+                    pygame.transform.rotate(motobike_png, 90)
                 if event.key == pygame.K_s:
                     print("going down")
                     player_x_change = 0
                     player_y_change = 1
+                    pygame.transform.rotate(motobike_png, -90)
 
         if player_x_change != 0 or player_y_change != 0:
             new_col = player_col + player_x_change
             new_row = player_row + player_y_change
 
-            if 0 <= new_col < 20 and 0 <= new_row < 15 or :
+            if 0 <= new_col < 20 and 0 <= new_row < 15:
                 global_grid[player_row][player_col] = 0   
                 player_col = new_col
                 player_row = new_row
@@ -121,10 +125,8 @@ def Game(): # Creates Game loop
         
         pygame.display.flip() 
 
-        if continous_movement:
-            fpsClock.tick(10)
-        else:
-            fpsClock.tick(15)
+        
+        fpsClock.tick(10)
 
 
 def Exit():  # If you use exit function then the game will exit.
