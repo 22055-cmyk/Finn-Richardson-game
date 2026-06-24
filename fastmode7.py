@@ -60,6 +60,8 @@ def Game(): # Creates Game loop
     player_col = 0 #X position
     player_row = 0 #Y position
     
+    original_img = Player.image
+
     for col, row in enumerate(global_grid):
         if 4 in row:
             player_row = col
@@ -73,6 +75,7 @@ def Game(): # Creates Game loop
     continous_movement = False
 
     while game_screen:
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_screen = False
@@ -86,33 +89,42 @@ def Game(): # Creates Game loop
                     print("going left")
                     player_x_change = -1
                     player_y_change = 0
-                    pygame.transform.rotate("motobike.png", 0)
+                    Player.image = pygame.transform.rotate(original_img, 0)
                 if event.key == pygame.K_d:
                     print("going right")
                     player_x_change = 1
                     player_y_change = 0
-                    pygame.transform.rotate("motobike.png", 180)
+                    Player.image = pygame.transform.rotate(original_img, 180)
                 if event.key == pygame.K_w:
                     print("going up")
                     player_x_change = 0
                     player_y_change = -1
-                    pygame.transform.rotate(motobike_png, 90)
+                    Player.image = pygame.transform.rotate(original_img, -90)
                 if event.key == pygame.K_s:
                     print("going down")
                     player_x_change = 0
                     player_y_change = 1
-                    pygame.transform.rotate(motobike_png, -90)
+                    Player.image = pygame.transform.rotate(original_img, 90)
 
         if player_x_change != 0 or player_y_change != 0:
             new_col = player_col + player_x_change
             new_row = player_row + player_y_change
 
             if 0 <= new_col < 20 and 0 <= new_row < 15:
-                global_grid[player_row][player_col] = 0   
-                player_col = new_col
-                player_row = new_row
-                global_grid[new_row][new_col] = 4
+                if global_grid[new_row][new_col] == 0:
+                    global_grid[player_row][player_col] = 0   
+                    player_col = new_col
+                    player_row = new_row
+                    global_grid[new_row][new_col] = 4
+                
+                if global_grid[new_row][new_col] == 3:
+                    global_grid[player_row][player_col] = 0   
+                    player_col = new_col
+                    player_row = new_row
+                    global_grid[new_row][new_col] = 4
 
+                
+                
                 if not continous_movement:
                     player_x_change = 0
                     player_y_change = 0

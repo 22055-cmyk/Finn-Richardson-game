@@ -102,16 +102,33 @@ def Game(): # Creates Game loop
         if player_x_change != 0 or player_y_change != 0:
             new_col = player_col + player_x_change
             new_row = player_row + player_y_change
+        
+        def player_moves():
+            global_grid[player_row][player_col] = 0   
+            player_col = new_col
+            player_row = new_row
+            global_grid[new_row][new_col] = 4
+        
 
-            if 0 <= new_col < 20 and 0 <= new_row < 15 or :
-                global_grid[player_row][player_col] = 0   
-                player_col = new_col
-                player_row = new_row
-                global_grid[new_row][new_col] = 4
+            if 0 <= new_col < 20 and 0 <= new_row < 15:
+                
+            
+            if global_grid[new_row][new_col] == 0:
+                    player_moves()
+                
+            if global_grid[new_row][new_col] == 3:
+                    player_moves()
 
-                if not continous_movement:
+            if not continous_movement:
                     player_x_change = 0
                     player_y_change = 0
+
+            if continous_movement:
+                print(global_grid[new_row][new_col])
+                if global_grid[new_row][new_col] == 1:
+                    continous_movement = not continous_movement
+                
+                
 
         screen.fill(screen_colour)
         Player.draw(screen)
@@ -122,9 +139,9 @@ def Game(): # Creates Game loop
         pygame.display.flip() 
 
         if continous_movement:
-            fpsClock.tick(10)
+            fpsClock.tick(6)
         else:
-            fpsClock.tick(15)
+            fpsClock.tick(60)
 
 
 def Exit():  # If you use exit function then the game will exit.
