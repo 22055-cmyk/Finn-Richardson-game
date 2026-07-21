@@ -8,15 +8,16 @@ pygame.init()
 fps = 60
 fpsClock = pygame.time.Clock()
 
-window_width = 1000
+
+window_width = 1000 # This is the size of the window
 window_height = 750
-screen = pygame.display.set_mode((window_width, window_height), pygame.RESIZABLE | pygame.DOUBLEBUF)
-screen_colour = (20, 20, 20)
+screen = pygame.display.set_mode((window_width, window_height), pygame.RESIZABLE | pygame.DOUBLEBUF) #I've made it resizable window.
+screen_colour = (20, 20, 20) #Grey colour for the bakground of the window
 
 class Button:
     """this code creates a button blueprint
     
-    This code makes a button that can have custom, x and y position, size, what is displayed on it, what happens when its pressed and the colours you want to use.
+    This code makes a button that can have custom, x and y position, size, what is displayed on it, and what happens when its pressed.
     I will use this code to make buttons for my games menus, which will have lots of different colours, functions and looks.
     I am using this code because it makes the process of making buttons very easy because I don't have to retype all this code everytime I want a new button.
 
@@ -26,43 +27,34 @@ class Button:
     """
 
     def __init__(self, x, y, image_path, onclickFunction):
-        
-        # Gets the image
-        self.image = pygame.image.load(image_path).convert_alpha()
-        # Makes the image 
-        self.rect = self.image.get_rect(center=(x, y))
+        self.image = pygame.image.load(image_path).convert_alpha() # Gets the image
+        self.rect = self.image.get_rect(center=(x, y)) # Makes the image
         self.onclickFunction = onclickFunction
 
     def draw(self, surface):
-        # This draws the image you want onto the surface you specify when drawing the image.
-        
-        surface.blit(self.image, self.rect)
+        surface.blit(self.image, self.rect) # This draws the image you want onto the surface you specify when drawing the image.
 
     def check_click(self, pos):
-        # Checks if mouse is over the button
-        if self.rect.collidepoint(pos):
-            # Checks whether onclickfunction has been defined in the class blueprint
-            if self.onclickFunction:
-                # Then it does the function defined below
-                self.onclickFunction()
+        if self.rect.collidepoint(pos): # Checks if mouse is over the button 
+            if self.onclickFunction: # Checks whether onclickfunction has been defined in the class blueprint 
+                self.onclickFunction() # Then it does the function defined below
 
-# These are the definitions 
+# These are the definitions for what function each button can do.
 def Game(): # Creates Game loop
     game_screen = True
-    global_grid = [[0 for _ in range(20)] for _ in range(15)] # Draws the grid of 0's to the size of the grid defined.
-
-    # Draws the obstacle class by generating random position and placing in random position.
-    Player = Obstacle("motobike.png", False, global_grid, 4, 1)
-    Orb = Obstacle("orb.png", False, global_grid, 3, 5)
-    Void = Obstacle("void.png", True, global_grid, 2, 50)
-    Wall = Obstacle("wall.png", True, global_grid, 1, 50)
+    global_grid = [[0 for _ in range(20)] for _ in range(15)] # Draws the grid of 0's to the size of the grid defined. 
+    # This is where I generate all my random coordinates, then all the obstacle IDs are converted to pixel coordinates later on with images.
+    
+    Player = Obstacle("motobike.png", False, global_grid, 4, 1) # Draws the obstacle class by generating random position and placing in random position.
+    Orb = Obstacle("orb.png", False, global_grid, 3, 5) # I have the name of the obstacle, the image used, 
+    Void = Obstacle("void.png", True, global_grid, 2, 50) # whether it needs an orb radius so nothin gis placed around it, 
+    Wall = Obstacle("wall.png", True, global_grid, 1, 50) # what grid it goes on (the only one), obstacle ID number, and max number of those obstacles.
     
     player_col = 0 #X position
     player_row = 0 #Y position
     
-    original_img = Player.image
-
-    for col, row in enumerate(global_grid):
+    original_img = Player.image # Gets player image.
+    for col, row in enumerate(global_grid): # Gets the player coordinate from the global grid.
         if 4 in row:
             player_row = col
             player_col = row.index(4)
@@ -70,22 +62,19 @@ def Game(): # Creates Game loop
 
     player_x_change = 0
     player_y_change = 0
-    global_grid[player_row][player_col] = 4
+    global_grid[player_row][player_col] = 4 # Puts the image where the (motobike/obstacle ID 4) is.
 
-    continous_movement = False
+    continous_movement = False # This is to make sure the player doesn't start in fastmode
 
     while game_screen:
-        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_screen = False
                 pygame.quit()     
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    
-                    continous_movement = not continous_movement
-                    
-                if event.key == pygame.K_a:
+                    continous_movement = not continous_movement # Toggle switch is space bar for whether motobike is moving non-stop or 1 tile at a time.
+                if event.key == pygame.K_a: # WASD will make the motobike move in specific direction and rotate to face that direction.
                     print("going left")
                     player_x_change = -1
                     player_y_change = 0
@@ -106,16 +95,16 @@ def Game(): # Creates Game loop
                     player_y_change = 1
                     Player.image = pygame.transform.rotate(original_img, 90)
 
-        if player_x_change != 0 or player_y_change != 0:
+        if player_x_change != 0 or player_y_change != 0: # Player movement, pressing one of the keys WASD
             new_col = player_col + player_x_change
             new_row = player_row + player_y_change
 
-            if 0 <= new_col < 20 and 0 <= new_row < 15:
-                if global_grid[new_row][new_col] == 0:
-                    global_grid[player_row][player_col] = 0   
+            if 0 <= new_col < 20 and 0 <= new_row < 15: # Boundary check: so the motobike can't go outside the window and crash the game.
+                if global_grid[new_row][new_col] == 0: # If the tile the motobike is gonna move onto empty it will move. 0 means empty, 3 means orb
+                    global_grid[player_row][player_col] = 0 # Sets the current grid position as empty.
                     player_col = new_col
                     player_row = new_row
-                    global_grid[new_row][new_col] = 4
+                    global_grid[new_row][new_col] = 4 # Assigns the new position after moving the grid value of 4, the motobike.
                 
                 if global_grid[new_row][new_col] == 3:
                     global_grid[player_row][player_col] = 0   
@@ -123,23 +112,18 @@ def Game(): # Creates Game loop
                     player_row = new_row
                     global_grid[new_row][new_col] = 4
 
-                
-                
-                if not continous_movement:
+                if not continous_movement: # Makes motobike move 1 tile at a time. So that the movement isn't non-stop. But it can be toggled on as well by the spacebar if the player wants to go really quickly.
                     player_x_change = 0
                     player_y_change = 0
 
+        # Redraws each of the following things every frame, at (10) frames per second
         screen.fill(screen_colour)
         Player.draw(screen)
         Void.draw(screen)
         Wall.draw(screen)
         Orb.draw(screen)
-        
         pygame.display.flip() 
-
-        
         fpsClock.tick(10)
-
 
 def Exit():  # If you use exit function then the game will exit.
     print("exit")
@@ -151,8 +135,9 @@ ExitButton = Button(((window_width * 1)/3), (window_height/2), 'exitbutton.png',
 PlayButton = Button(((window_width * 2)/3), (window_height/2), 'playbutton.png', Game)
 
 class Obstacle:
-    """THis code creates a grid of 1's and 0's and will randomly place a wall in one of the grid segments
-    This class is
+    """This code creates a grid of 1's and 0's and will randomly place a wall in one of the grid segments
+    
+    This code changes the window of the game to include obstacles that the motobike cannot move through and objectives.
     """
     def __init__ (self, image_path, random_adjacent, game_grid, obstacle_id, max_cells):
         self.image = pygame.image.load(image_path).convert_alpha() # Gets the image 
@@ -164,36 +149,38 @@ class Obstacle:
         self.obstacle_id = obstacle_id
         self.max_cells = max_cells # Maximum cells I want to be placed.
 
-        grid_width = len(game_grid[0]) #  20
-        grid_height = len(game_grid)   #  15
+        grid_width = len(game_grid[0]) # Width of the global grid: 20
+        grid_height = len(game_grid)   # Height of the global grid: 15
         
         placed_cells = 0  # Number of cells at the moment.
 
-        while placed_cells < max_cells:  # If there is too many 1s it will stop the loop
+        while placed_cells < max_cells:  # If there is too many obstacles it will stop the loop
             # generates random value for the x and y coordinate
             center_x = random.randint(0, grid_width - 1)
             center_y = random.randint(0, grid_height - 1)
             
-            # If its empty it places the obstacle
+            # Checks random grid coordinate generated is empty of all obstacles.
             if self.game_grid[center_y][center_x] == 0:
 
-                self.orb_radius(center_x, center_y, grid_width, grid_height)
+                self.orb_radius(center_x, center_y, grid_width, grid_height) # Skips placing walls or voids if they are within the radius of the player or orbs.
                 if obstacle_id != 3 and obstacle_id != 4 and self.orb_aura == True:
-                    continue # restarts while loop
+                    continue # restarts while loop.
 
                 self.game_grid[center_y][center_x] = obstacle_id
                 placed_cells += 1  # Adds 1 to placed_cells for every time this while loops
             
+            # This is the fallback if the coordinate can't be placed, it tries to place in an adjacent coordinate.
             elif self.random_adjacent:
-                # Adds the values of the cardinal directions to the coordinates, so i get 4 new coordinates that are on all different sides of the original
+                # Adds the values of the cardinal directions to the coordinates, so i get 4 new coordinates that are on all different sides of the original.
                 directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (1, 1), (1, -1), (-1, 1), (-1, -1)]
                 placed_adjacent = False
 
-                for direction_x, direction_y in directions:
-                    adjacent_x, adjacent_y = center_x + direction_x, center_y + direction_y
+                for direction_x, direction_y in directions: 
+                    adjacent_x, adjacent_y = center_x + direction_x, center_y + direction_y # Adds the direction coordinates from the list of directions, with the current coordinate position of the obstacle. 
+                    # To get the position of the obstacle if it were moved to the adjacent spot.
 
-                    if 0 <= adjacent_x < grid_width and 0 <= adjacent_y < grid_height:
-                        if self.game_grid[adjacent_y][adjacent_x] == 0:
+                    if 0 <= adjacent_x < grid_width and 0 <= adjacent_y < grid_height: # Checks the adjacent coordinate hasn't gone outside the global grid boundary.
+                        if self.game_grid[adjacent_y][adjacent_x] == 0: 
 
                             self.orb_radius(center_x, center_y, grid_width, grid_height)
                             if obstacle_id != 3 and obstacle_id != 4 and self.orb_aura == True:
@@ -204,7 +191,7 @@ class Obstacle:
                             placed_adjacent = True
                             break
 
-                    if not placed_adjacent:
+                    if not placed_adjacent: # Fallback if everything else fails, and the obstacle can't be placed so the whole program doesn't crash. And useful for debugging.
                         print(f"panic!!! ({center_x}, {center_y}) are completely trapped")
 
                 else:
@@ -224,7 +211,8 @@ class Obstacle:
         for row in self.game_grid:
             print(*row, sep=" ")    
 
-    def orb_radius(self, center_x, center_y, grid_width, grid_height):
+    # Used to check if all the spaces around the orbs and player are empty
+    def orb_radius(self, center_x, center_y, grid_width, grid_height): 
 
         self.orb_aura = False
         
@@ -236,7 +224,7 @@ class Obstacle:
             adjacent_x, adjacent_y = center_x + direction_x, center_y + direction_y
 
             if 0 <= adjacent_x < grid_width and 0 <= adjacent_y < grid_height:
-                if self.game_grid[adjacent_y][adjacent_x] >= 3:
+                if self.game_grid[adjacent_y][adjacent_x] >= 3: 
                     self.orb_aura = True
         
         if self.orb_aura == True:
@@ -244,7 +232,7 @@ class Obstacle:
 
     def draw(self, surface):
         """
-        this code checks every cell in the game grid whether it has a cell value or not.
+        This code checks every cell in the game grid whether it has a cell value or not.
         it does this by using enumerate, for y, row in enumerate(self.game_grid): basically
         means the y is the index of the enumerator, so it keeps track of the y position, and 
         the row which has its own enumerate. if i had a dictionary of colours, i could enumerate
@@ -252,10 +240,10 @@ class Obstacle:
         EG: for index, colour in enumerate(colours):
         print(f"Index:{index} ,Colour:{colour}")
         """
-        for y, row in enumerate(self.game_grid):
+        for y, row in enumerate(self.game_grid): # This code goes through every coordinate in the grid.
             for x, cell_value in enumerate(row):
                 if cell_value == self.obstacle_id:
-                    self.window_grid_x = x * self.cell_size + (self.cell_size / 2)
+                    self.window_grid_x = x * self.cell_size + (self.cell_size / 2) # Here it converts coordinates on the grid if there is an obstacle there, to a pixel coordinate on the window.
                     self.window_grid_y = y * self.cell_size + (self.cell_size / 2)
         
                     # Makes the image in the coordinates defined earlier, window_grid_x/y is the grid width multiplied by the cell size to make it fit on the window.
@@ -263,17 +251,16 @@ class Obstacle:
                 
                     # Puts image in dimensions of the image rect and places image rect on the screen
                     surface.blit(self.image, self.rect)
-
-
 fpsClock.tick(60)
 
+# This is the MAIN MENU.
 game_loop = True
 while game_loop:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game_loop = False
             pygame.quit()
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.MOUSEBUTTONDOWN: # Checks if player has pressed a button when in the main menu.
             ExitButton.check_click(event.pos)
             PlayButton.check_click(event.pos)
     screen.fill(screen_colour)
