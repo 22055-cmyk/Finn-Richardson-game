@@ -113,7 +113,7 @@ def Game(): # Creates Game loop
             if 0 <= new_col < 20 and 0 <= new_row < 15:
                 
             
-            if global_grid[new_row][new_col] == 0:
+                if global_grid[new_row][new_col] == 0:
                     player_moves()
                 
             if global_grid[new_row][new_col] == 3:
