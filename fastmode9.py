@@ -14,6 +14,127 @@ window_height = 750
 screen = pygame.display.set_mode((window_width, window_height), pygame.RESIZABLE | pygame.DOUBLEBUF) #I've made it resizable window.
 screen_colour = (20, 20, 20) #Grey colour for the bakground of the window
 
+class Obstacle:
+    """This code creates a grid of 1's and 0's and will randomly place a wall in one of the grid segments
+    
+    This code changes the window of the game to include obstacles that the motobike cannot move through and objectives.
+    """
+    def __init__ (self, image_path, random_adjacent, game_grid, obstacle_id, max_cells):
+        self.image = pygame.image.load(image_path).convert_alpha() # Gets the image 
+        self.random_adjacent = random_adjacent
+        self.cell_size = 50 # Defines the size of each cell / 0 to take up. There is 50 pixel distance between each 0 when drawn on the window.
+        self.window_grid_x = 0
+        self.window_grid_y = 0
+        self.game_grid = game_grid
+        self.obstacle_id = obstacle_id
+        self.max_cells = max_cells # Maximum cells I want to be placed.
+
+        grid_width = len(game_grid[0]) # Width of the global grid: 20
+        grid_height = len(game_grid)   # Height of the global grid: 15
+        
+        placed_cells = 0  # Number of cells at the moment.
+
+        while placed_cells < max_cells:  # If there is too many obstacles it will stop the loop
+            # generates random value for the x and y coordinate
+            center_x = random.randint(0, grid_width - 1)
+            center_y = random.randint(0, grid_height - 1)
+            
+            # Checks random grid coordinate generated is empty of all obstacles.
+            if self.game_grid[center_y][center_x] == 0:
+
+                self.orb_radius(center_x, center_y, grid_width, grid_height) # Skips placing walls or voids if they are within the radius of the player or orbs.
+                if obstacle_id != 3 and obstacle_id != 4 and self.orb_aura == True:
+                    continue # restarts while loop.
+
+                self.game_grid[center_y][center_x] = obstacle_id
+                placed_cells += 1  # Adds 1 to placed_cells for every time this while loops
+            
+            # This is the fallback if the coordinate can't be placed, it tries to place in an adjacent coordinate.
+            elif self.random_adjacent:
+                # Adds the values of the cardinal directions to the coordinates, so i get 4 new coordinates that are on all different sides of the original.
+                directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (1, 1), (1, -1), (-1, 1), (-1, -1)]
+                placed_adjacent = False
+
+                for direction_x, direction_y in directions: 
+                    adjacent_x, adjacent_y = center_x + direction_x, center_y + direction_y # Adds the direction coordinates from the list of directions, with the current coordinate position of the obstacle. 
+                    # To get the position of the obstacle if it were moved to the adjacent spot.
+
+                    if 0 <= adjacent_x < grid_width and 0 <= adjacent_y < grid_height: # Checks the adjacent coordinate hasn't gone outside the global grid boundary.
+                        if self.game_grid[adjacent_y][adjacent_x] == 0: 
+
+                            self.orb_radius(center_x, center_y, grid_width, grid_height)
+                            if obstacle_id != 3 and obstacle_id != 4 and self.orb_aura == True:
+                                continue # restarts while loop
+
+                            self.game_grid[adjacent_y][adjacent_x] = obstacle_id
+                            placed_cells += 1
+                            placed_adjacent = True
+                            break
+
+                    if not placed_adjacent: # Fallback if everything else fails, and the obstacle can't be placed so the whole program doesn't crash. And useful for debugging.
+                        print(f"panic!!! ({center_x}, {center_y}) are completely trapped")
+
+                else:
+                    print(f"space ({center_x}, {center_y}) occupied, random_adjacent is False.")
+
+        # below are some very helpful debugging tools to tell what is going on :)
+        # how many walls and voids have been placed
+        total_walls = sum(row.count(1) for row in self.game_grid)
+        total_voids = sum(row.count(2) for row in self.game_grid)
+        total_orbs = sum(row.count(3) for row in self.game_grid)
+
+        print((center_x, center_y)) #These are the coordinates of the placed number, loops to include numbers 1, 2, 3 and 4
+
+        print(f"Walls: {total_walls} | Voids: {total_voids} | Orbs: {total_orbs}")
+
+        # this code makes the grid look nice by removing all the brackets and ensuring each line is below the next so its not all in one big line :)    
+        for row in self.game_grid:
+            print(*row, sep=" ")    
+
+    # Used to check if all the spaces around the orbs and player are empty
+    def orb_radius(self, center_x, center_y, grid_width, grid_height): 
+
+        self.orb_aura = False
+        
+        if self.game_grid[center_y][center_x] >= 3:
+            self.orb_aura = True
+
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (1, 1), (1, -1), (-1, 1), (-1, -1)]
+        for direction_x, direction_y in directions:
+            adjacent_x, adjacent_y = center_x + direction_x, center_y + direction_y
+
+            if 0 <= adjacent_x < grid_width and 0 <= adjacent_y < grid_height:
+                if self.game_grid[adjacent_y][adjacent_x] >= 3: 
+                    self.orb_aura = True
+        
+        if self.orb_aura == True:
+            pass
+
+    def draw(self, surface):
+        """
+        This code checks every cell in the game grid whether it has a cell value or not.
+        it does this by using enumerate, for y, row in enumerate(self.game_grid): basically
+        means the y is the index of the enumerator, so it keeps track of the y position, and 
+        the row which has its own enumerate. if i had a dictionary of colours, i could enumerate
+        it to tell me what the index is? (the number on the list going down) and the colour.
+        EG: for index, colour in enumerate(colours):
+        print(f"Index:{index} ,Colour:{colour}")
+        """
+        for y, row in enumerate(self.game_grid): # This code goes through every coordinate in the grid.
+            for x, cell_value in enumerate(row):
+                if cell_value == self.obstacle_id:
+                    self.window_grid_x = x * self.cell_size + (self.cell_size / 2) # Here it converts coordinates on the grid if there is an obstacle there, to a pixel coordinate on the window.
+                    self.window_grid_y = y * self.cell_size + (self.cell_size / 2)
+        
+                    # Makes the image in the coordinates defined earlier, window_grid_x/y is the grid width multiplied by the cell size to make it fit on the window.
+                    self.rect = self.image.get_rect(center=(self.window_grid_x, self.window_grid_y))
+                
+                    # Puts image in dimensions of the image rect and places image rect on the screen
+                    surface.blit(self.image, self.rect)
+    def effect(self, surface):
+        self.rect = self.image.get_rect(center=(500, 375))
+        surface.blit(self.image, self.rect)
+
 class Button:
     """this code creates a button blueprint
     
@@ -152,133 +273,12 @@ def Exit():  # If you use exit function then the game will exit.
     print("exit")
     pygame.quit()
 
-# Setting all the positions to be changable if i chaange the window size of want to quickly change the size of the button themselves
-# (x, y, width, height, text, difficulty, onclickFunction, rect_colour, text_colour)
+def Nothing(): # This does nothing, its for any buttons i want to do nothing.
+    print("i do nothing")
+
 ExitButton = Button(((window_width * 1)/3), (window_height/2), 'exitbutton.png', Exit)
 PlayButton = Button(((window_width * 2)/3), (window_height/2), 'playbutton.png', Game)
-
-class Obstacle:
-    """This code creates a grid of 1's and 0's and will randomly place a wall in one of the grid segments
-    
-    This code changes the window of the game to include obstacles that the motobike cannot move through and objectives.
-    """
-    def __init__ (self, image_path, random_adjacent, game_grid, obstacle_id, max_cells):
-        self.image = pygame.image.load(image_path).convert_alpha() # Gets the image 
-        self.random_adjacent = random_adjacent
-        self.cell_size = 50 # Defines the size of each cell / 0 to take up. There is 50 pixel distance between each 0 when drawn on the window.
-        self.window_grid_x = 0
-        self.window_grid_y = 0
-        self.game_grid = game_grid
-        self.obstacle_id = obstacle_id
-        self.max_cells = max_cells # Maximum cells I want to be placed.
-
-        grid_width = len(game_grid[0]) # Width of the global grid: 20
-        grid_height = len(game_grid)   # Height of the global grid: 15
-        
-        placed_cells = 0  # Number of cells at the moment.
-
-        while placed_cells < max_cells:  # If there is too many obstacles it will stop the loop
-            # generates random value for the x and y coordinate
-            center_x = random.randint(0, grid_width - 1)
-            center_y = random.randint(0, grid_height - 1)
-            
-            # Checks random grid coordinate generated is empty of all obstacles.
-            if self.game_grid[center_y][center_x] == 0:
-
-                self.orb_radius(center_x, center_y, grid_width, grid_height) # Skips placing walls or voids if they are within the radius of the player or orbs.
-                if obstacle_id != 3 and obstacle_id != 4 and self.orb_aura == True:
-                    continue # restarts while loop.
-
-                self.game_grid[center_y][center_x] = obstacle_id
-                placed_cells += 1  # Adds 1 to placed_cells for every time this while loops
-            
-            # This is the fallback if the coordinate can't be placed, it tries to place in an adjacent coordinate.
-            elif self.random_adjacent:
-                # Adds the values of the cardinal directions to the coordinates, so i get 4 new coordinates that are on all different sides of the original.
-                directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (1, 1), (1, -1), (-1, 1), (-1, -1)]
-                placed_adjacent = False
-
-                for direction_x, direction_y in directions: 
-                    adjacent_x, adjacent_y = center_x + direction_x, center_y + direction_y # Adds the direction coordinates from the list of directions, with the current coordinate position of the obstacle. 
-                    # To get the position of the obstacle if it were moved to the adjacent spot.
-
-                    if 0 <= adjacent_x < grid_width and 0 <= adjacent_y < grid_height: # Checks the adjacent coordinate hasn't gone outside the global grid boundary.
-                        if self.game_grid[adjacent_y][adjacent_x] == 0: 
-
-                            self.orb_radius(center_x, center_y, grid_width, grid_height)
-                            if obstacle_id != 3 and obstacle_id != 4 and self.orb_aura == True:
-                                continue # restarts while loop
-
-                            self.game_grid[adjacent_y][adjacent_x] = obstacle_id
-                            placed_cells += 1
-                            placed_adjacent = True
-                            break
-
-                    if not placed_adjacent: # Fallback if everything else fails, and the obstacle can't be placed so the whole program doesn't crash. And useful for debugging.
-                        print(f"panic!!! ({center_x}, {center_y}) are completely trapped")
-
-                else:
-                    print(f"space ({center_x}, {center_y}) occupied, random_adjacent is False.")
-
-        # below are some very helpful debugging tools to tell what is going on :)
-        # how many walls and voids have been placed
-        total_walls = sum(row.count(1) for row in self.game_grid)
-        total_voids = sum(row.count(2) for row in self.game_grid)
-        total_orbs = sum(row.count(3) for row in self.game_grid)
-
-        print((center_x, center_y)) #These are the coordinates of the placed number, loops to include numbers 1, 2, 3 and 4
-
-        print(f"Walls: {total_walls} | Voids: {total_voids} | Orbs: {total_orbs}")
-
-        # this code makes the grid look nice by removing all the brackets and ensuring each line is below the next so its not all in one big line :)    
-        for row in self.game_grid:
-            print(*row, sep=" ")    
-
-    # Used to check if all the spaces around the orbs and player are empty
-    def orb_radius(self, center_x, center_y, grid_width, grid_height): 
-
-        self.orb_aura = False
-        
-        if self.game_grid[center_y][center_x] >= 3:
-            self.orb_aura = True
-
-        directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (1, 1), (1, -1), (-1, 1), (-1, -1)]
-        for direction_x, direction_y in directions:
-            adjacent_x, adjacent_y = center_x + direction_x, center_y + direction_y
-
-            if 0 <= adjacent_x < grid_width and 0 <= adjacent_y < grid_height:
-                if self.game_grid[adjacent_y][adjacent_x] >= 3: 
-                    self.orb_aura = True
-        
-        if self.orb_aura == True:
-            pass
-
-    def draw(self, surface):
-        """
-        This code checks every cell in the game grid whether it has a cell value or not.
-        it does this by using enumerate, for y, row in enumerate(self.game_grid): basically
-        means the y is the index of the enumerator, so it keeps track of the y position, and 
-        the row which has its own enumerate. if i had a dictionary of colours, i could enumerate
-        it to tell me what the index is? (the number on the list going down) and the colour.
-        EG: for index, colour in enumerate(colours):
-        print(f"Index:{index} ,Colour:{colour}")
-        """
-        for y, row in enumerate(self.game_grid): # This code goes through every coordinate in the grid.
-            for x, cell_value in enumerate(row):
-                if cell_value == self.obstacle_id:
-                    self.window_grid_x = x * self.cell_size + (self.cell_size / 2) # Here it converts coordinates on the grid if there is an obstacle there, to a pixel coordinate on the window.
-                    self.window_grid_y = y * self.cell_size + (self.cell_size / 2)
-        
-                    # Makes the image in the coordinates defined earlier, window_grid_x/y is the grid width multiplied by the cell size to make it fit on the window.
-                    self.rect = self.image.get_rect(center=(self.window_grid_x, self.window_grid_y))
-                
-                    # Puts image in dimensions of the image rect and places image rect on the screen
-                    surface.blit(self.image, self.rect)
-    def effect(self, surface):
-        self.rect = self.image.get_rect(center=(500, 375))
-        surface.blit(self.image, self.rect)
-
-fpsClock.tick(60)
+Controls = Button((window_width * 0.16), (window_height * 0.20), 'controls.png', Nothing)
 
 # This is the MAIN MENU.
 game_loop = True
@@ -290,7 +290,9 @@ while game_loop:
         if event.type == pygame.MOUSEBUTTONDOWN: # Checks if player has pressed a button when in the main menu.
             ExitButton.check_click(event.pos)
             PlayButton.check_click(event.pos)
+            Controls.check_click(event.pos)
     screen.fill(screen_colour)
     ExitButton.draw(screen)
     PlayButton.draw(screen)
+    Controls.draw(screen)
     pygame.display.update()
